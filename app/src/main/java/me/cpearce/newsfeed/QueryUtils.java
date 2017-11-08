@@ -63,6 +63,11 @@ public class QueryUtils {
         return articles;
     }
 
+//    public static List<Source> fetchSourceData(String requestUrl, String cataegory, String language,
+//                                               String country) {
+//        StringBuilder temp_url = requestUrl + "?catagory=" + cataegory + language + country
+//    }
+
     public static String fetchEntityData(String requestUrl, String description) {
         URL url = createUrl(requestUrl);
         String jsonResponse = null;
