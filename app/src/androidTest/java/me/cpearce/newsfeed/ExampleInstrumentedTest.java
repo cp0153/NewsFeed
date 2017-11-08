@@ -1,4 +1,4 @@
-package me.cpearce.assignment_6_news_app_cp0153;
+package me.cpearce.newsfeed;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("me.cpearce.assignment_6_news_app_cp0153", appContext.getPackageName());
+        assertEquals("me.cpearce.newsfeed", appContext.getPackageName());
     }
 }

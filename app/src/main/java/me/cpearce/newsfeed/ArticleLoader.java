@@ -1,4 +1,4 @@
-package me.cpearce.assignment_6_news_app_cp0153;
+package me.cpearce.newsfeed;
 
 import android.content.AsyncTaskLoader;
 import android.content.Context;
