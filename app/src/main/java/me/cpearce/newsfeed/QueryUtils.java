@@ -1,4 +1,4 @@
-package me.cpearce.assignment_6_news_app_cp0153;
+package me.cpearce.newsfeed;
 
 import android.text.TextUtils;
 import android.util.Log;
@@ -61,7 +61,6 @@ public class QueryUtils {
 
         // Return the list of {@link Articles}s
         return articles;
-
     }
 
     public static String fetchEntityData(String requestUrl, String description) {
@@ -208,12 +207,12 @@ public class QueryUtils {
             conn.setDoOutput(true);
             conn.setRequestProperty("Content-Type", "application/json");
 
-            HashMap document_propertiees = new HashMap();
-            document_propertiees.put("type", "PLAIN_TEXT");
-            document_propertiees.put("content", description);
+            HashMap document_properties = new HashMap();
+            document_properties.put("type", "PLAIN_TEXT");
+            document_properties.put("content", description);
 
             HashMap document = new HashMap();
-            document.put("document", document_propertiees);
+            document.put("document", document_properties);
             JSONObject doc = new JSONObject(document);
 
             OutputStream os = conn.getOutputStream();
