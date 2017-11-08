@@ -6,4 +6,13 @@
 
     <!-- Error message when there is no internet connectivity [CHAR LIMIT=NONE] -->
     <string name="no_internet_connection">No internet connection.</string>
+
+    <!-- Title for the NavigationView Menu [CHAR LIMIT=NONE] -->
+    <string name="Nav_Menu_Title">Sections</string>
+
+    <!-- Title for the Trending Section of the Nav Menu [CHAR LIMIT=NONE] -->
+    <string name="Trending_Title">Trending</string>
+
+    <!-- Title for the Trending Section of the Nav Menu [CHAR LIMIT=NONE] -->
+    <string name="Test_Title">Test</string>
 </resources>
