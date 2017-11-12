@@ -5,6 +5,8 @@ import android.content.Context;
 
 import java.util.List;
 
+import me.cpearce.newsfeed.model.Article;
+
 /**
  * Loads a list of earthquakes by using an AsyncTask to perform the
  * network request to the given URL.
@@ -15,9 +17,9 @@ public class ArticleLoader extends AsyncTaskLoader<List<Article>> {
     private static final String LOG_TAG = ArticleLoader.class.getName();
 
     /** Query URL */
-    private String mNews_Url;
+    private String mNewsUrl;
     /** Query URL */
-    private String mML_Url;
+    private String mMLUrl;
 
     /**
      * Constructs a new {@link ArticleLoader}.
@@ -28,8 +30,8 @@ public class ArticleLoader extends AsyncTaskLoader<List<Article>> {
      */
     public ArticleLoader(Context context, String news_url, String ml_url) {
         super(context);
-        mNews_Url = news_url;
-        mML_Url = ml_url;
+        mNewsUrl = news_url;
+        mMLUrl = ml_url;
     }
 
     @Override
@@ -42,18 +44,18 @@ public class ArticleLoader extends AsyncTaskLoader<List<Article>> {
      */
     @Override
     public List<Article> loadInBackground() {
-        if (mNews_Url == null) {
+        if (mNewsUrl == null) {
             return null;
         }
 
         // Perform the network request, parse the response, and extract a list of articles.
-        List<Article> articles = QueryUtils.fetchArticleData(mNews_Url);
-        for (int i = 0; i < articles.size(); i++) {
-            Article article = articles.get(i);
-            String entities = QueryUtils.fetchEntityData(mML_Url, article.getmDescription());
-
-            article.setmEntites(entities);
-        }
+        List<Article> articles = QueryUtils.fetchArticleData(mNewsUrl);
+//        for (int i = 0; i < articles.size(); i++) {
+//            Article article = articles.get(i);
+//            String entities = QueryUtils.fetchEntityData(mMLUrl, article.getmDescription());
+//
+//            article.setmEntites(entities);
+//        }
         return articles;
     }
 }

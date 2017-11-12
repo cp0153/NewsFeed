@@ -13,10 +13,11 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.view.Menu;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import me.cpearce.newsfeed.model.Article;
 
 public class MainActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<List<Article>> {
@@ -28,22 +29,20 @@ public class MainActivity extends AppCompatActivity
     /**
      * URL for the https://newsapi.org
      */
-    private static final String NEWS_REQUEST_URL =
-            "https://newsapi.org/v1/articles?source=google-news&sortBy=top&apiKey=23b2fa848a2a45aa85546b463a7afc0a";
+    private static final String ARTICLE_REQUEST_ROOT_URL = "https://newsapi.org/v1/articles?source=google-news&sortBy=top&apiKey=23b2fa848a2a45aa85546b463a7afc0a";
 
-    private static final String NAT_LANGUAGE_REQUEST_URL =
-            "https://language.googleapis.com/v1/documents:analyzeEntities?key=AIzaSyAh9uz0qNveHuiNYNBhjanf5gq86Su5rlo";
+    private static final String NAT_LANGUAGE_REQUEST_ROOT_URL = "https://language.googleapis.com/v1/documents:analyzeEntities?key=AIzaSyAh9uz0qNveHuiNYNBhjanf5gq86Su5rlo";
 
+    private static final String SOURCE_REQUEST_URL = "https://newsapi.org/v1/sources?apiKey=23b2fa848a2a45aa85546b463a7afc0a";
     /**
      * Constant value for the article loader ID. We can choose any integer.
      * This really only comes into play if you're using multiple loaders.
      */
-    private static final int ARTICLE_LOADER_ID = 1;
 
-    /**
-     * Adapter for the list of articles
-     */
-    //private ArticleAdapter mAdapter;
+    private static final int ARTICLE_LOADER_ID = 1;
+    private static final int SOURCE_LOADER_ID = 2;
+//    private static final int ENTITY_LOADER_ID = 2;
+
 
     /**
      * TextView that is displayed when the list is empty
@@ -104,6 +103,7 @@ public class MainActivity extends AppCompatActivity
             // the bundle. Pass in this activity for the LoaderCallbacks parameter (which is valid
             // because this activity implements the LoaderCallbacks interface).
             loaderManager.initLoader(ARTICLE_LOADER_ID, null, this);
+            loaderManager.initLoader(SOURCE_LOADER_ID, null, this);
         } else {
             // Otherwise, display error
             // First, hide loading indicator so error message will be visible
@@ -115,19 +115,25 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    // TODO: refactor to use 3 loaders
     @Override
     public Loader<List<Article>> onCreateLoader(int i, Bundle bundle) {
         // Create a new loader for the given URL
-        return new ArticleLoader(this, NEWS_REQUEST_URL, NAT_LANGUAGE_REQUEST_URL);
+        return new ArticleLoader(this, ARTICLE_REQUEST_ROOT_URL, NAT_LANGUAGE_REQUEST_ROOT_URL);
     }
 
+    //    @Override
+//    public Loader<List<Source>> onCreateLoader(int i, Bundle bundle) {
+//        return new SourceLoader(this, SOURCE_REQUEST_URL);
+//    }
+
     @Override
-    public void onLoadFinished(Loader<List<Article>> loader, List<Article> earthquakes) {
+    public void onLoadFinished(Loader<List<Article>> loader, List<Article> articles) {
         // Hide loading indicator because the data has been loaded
         View loadingIndicator = findViewById(R.id.loading_indicator);
         loadingIndicator.setVisibility(View.GONE);
 
-        // Set empty state text to display "No earthquakes found."
+        // Set empty state text to display "No articles found."
         mEmptyStateTextView.setText(R.string.no_articles);
 
         // Clear the adapter of previous earthquake data
@@ -135,8 +141,8 @@ public class MainActivity extends AppCompatActivity
 
         // If there is a valid list of {@link Earthquake}s, then add them to the adapter's
         // data set. This will trigger the ListView to update.
-        if (earthquakes != null && !earthquakes.isEmpty()) {
-            mAdapter.addAll(earthquakes);
+        if (articles != null && !articles.isEmpty()) {
+            mAdapter.addAll(articles);
         }
     }
 

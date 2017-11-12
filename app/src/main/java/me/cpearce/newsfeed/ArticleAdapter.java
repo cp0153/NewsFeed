@@ -7,10 +7,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
+
+import me.cpearce.newsfeed.model.Article;
 
 /**
  * An {@link ArticleAdapter} knows how to create a list item layout for each earthquake

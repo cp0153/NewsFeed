@@ -1,7 +1,8 @@
-package me.cpearce.newsfeed;
+package me.cpearce.newsfeed.model;
 
 /**
  * Created by Christopher on 10/19/2017.
+ * model for Articles
  */
 
 public class Article {

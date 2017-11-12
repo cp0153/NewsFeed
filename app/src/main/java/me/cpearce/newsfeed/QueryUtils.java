@@ -3,6 +3,9 @@ package me.cpearce.newsfeed;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,8 +27,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.AbstractMap.SimpleEntry;
+import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
+
+import me.cpearce.newsfeed.model.Article;
+import me.cpearce.newsfeed.model.Source;
 
 /**
  * Helper methods related to requesting and receiving news data from https://newsapi.org/
@@ -57,10 +64,20 @@ public class QueryUtils {
         }
 
         // Extract relevant fields from the JSON response and create a list of {@link Articles}s
-        List<Article> articles = extractArticles(jsonResponse);
 
         // Return the list of {@link Articles}s
-        return articles;
+        return extractArticles(jsonResponse);
+    }
+
+    public static List<Source> fetchSourceData(String requestUrl) {
+        URL url = createUrl(requestUrl);
+        String jsonResponse = null;
+        try {
+            jsonResponse = makeGetHttpRequest(url);
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "Problem making the GET HTTP request.", e);
+        }
+        return extractSources(jsonResponse);
     }
 
 //    public static List<Source> fetchSourceData(String requestUrl, String cataegory, String language,
@@ -115,6 +132,62 @@ public class QueryUtils {
             Log.e("QueryUtils", "Problem parsing the article JSON results", e);
         }
         return entities.toString().substring(0, entities.length() - 2);
+    }
+
+    private static List<Source> extractSources(String sourcesJSON) {
+        if (TextUtils.isEmpty(sourcesJSON)) {
+            return null;
+        }
+        List<Source> sources = new ArrayList<>();
+
+        try {
+            JSONObject baseJsonResponse = new JSONObject(sourcesJSON);
+            JSONArray sourcesArray = baseJsonResponse.getJSONArray("sources");
+
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference SourceRef = database.getReference("sources");
+
+            for (int i = 0; i < sourcesArray.length(); i++) {
+                JSONObject currentSource = sourcesArray.getJSONObject(i);
+                String id = currentSource.getString("id");
+                String name = currentSource.getString("name");
+                String description = currentSource.getString("description");
+                String url = currentSource.getString("url");
+                String catagory = currentSource.getString("catagory");
+                String language = currentSource.getString("language");
+                String country = currentSource.getString("country");
+                JSONArray sortBysAvailable = currentSource.getJSONArray("sortBysAvailable");
+                List<String> sortBysAvailableList = new ArrayList<String>();
+                for (int j = 0; j < sortBysAvailable.length(); j++) {
+                    sortBysAvailableList.add(sortBysAvailable.getString(j));
+                }
+                Map<String, Boolean> sortByAvailable = new HashMap<String, Boolean>();
+                if (sortBysAvailableList.contains("top")) {
+                    sortByAvailable.put("top", true);
+                } else {
+                    sortByAvailable.put("top", false);
+                }
+
+                if (sortBysAvailableList.contains("top")) {
+                    sortByAvailable.put("latest", true);
+                } else {
+                    sortByAvailable.put("latest", false);
+                }
+
+                if (sortBysAvailableList.contains("top")) {
+                    sortByAvailable.put("latest", true);
+                } else {
+                    sortByAvailable.put("latest", false);
+                }
+
+                Source source = new Source(id, name, description, url, catagory, language, country, sortByAvailable);
+                sources.add(source);
+                SourceRef.push().setValue(source);
+            }
+        } catch (JSONException e) {
+            Log.e("QueryUtils", "Problem parsing the article JSON results", e);
+        }
+        return sources;
     }
 
 
@@ -306,7 +379,8 @@ public class QueryUtils {
 //            entities.substring(0, entities.length() -2);
 //            String built_entities = entities.toString();
 
-
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference myRef = database.getReference("articles");
             // for each article in the articleArray, create an {@link Article} object
             for (int i = 0; i < articleArray.length(); i++) {
 
@@ -320,6 +394,7 @@ public class QueryUtils {
 
                 Article article = new Article(author, title, description, url, urlToImage, publishedAt, entities);
                 articles.add(article);
+                myRef.push().setValue(article);
             }
 
         } catch (JSONException e) {
@@ -328,7 +403,6 @@ public class QueryUtils {
             // with the message from the exception.
             Log.e("QueryUtils", "Problem parsing the article JSON results", e);
         }
-
         return articles;
     }
 }
