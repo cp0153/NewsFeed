@@ -8,7 +8,7 @@ import java.util.List;
 import me.cpearce.newsfeed.model.Article;
 
 /**
- * Loads a list of earthquakes by using an AsyncTask to perform the
+ * Loads a list of articles by using an AsyncTask to perform the
  * network request to the given URL.
  */
 public class ArticleLoader extends AsyncTaskLoader<List<Article>> {

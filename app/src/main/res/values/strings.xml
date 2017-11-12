@@ -2,7 +2,7 @@
     <string name="app_name">News</string>
 
     <!-- Text to display in the list when there are no articles [CHAR LIMIT=NONE] -->
-    <string name="no_articles">No earthquakes found.</string>
+    <string name="no_articles">No articles found.</string>
 
     <!-- Error message when there is no internet connectivity [CHAR LIMIT=NONE] -->
     <string name="no_internet_connection">No internet connection.</string>
@@ -15,4 +15,5 @@
 
     <!-- Title for the Trending Section of the Nav Menu [CHAR LIMIT=NONE] -->
     <string name="Test_Title">Test</string>
+    <string name="news_sections">News Sections</string>
 </resources>

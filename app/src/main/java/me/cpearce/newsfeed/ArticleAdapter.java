@@ -12,7 +12,7 @@ import java.util.List;
 import me.cpearce.newsfeed.model.Article;
 
 /**
- * An {@link ArticleAdapter} knows how to create a list item layout for each earthquake
+ * An {@link ArticleAdapter} knows how to create a list item layout for each article
  * in the data source (a list of {@link Article} objects).
  *
  * These list item layouts will be provided to an adapter view like ListView
