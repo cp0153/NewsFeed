@@ -5,6 +5,8 @@
 //
 //import java.util.List;
 //
+//import me.cpearce.newsfeed.model.Entity;
+//
 ///**
 // * Created by Christopher on 11/11/2017.
 // */

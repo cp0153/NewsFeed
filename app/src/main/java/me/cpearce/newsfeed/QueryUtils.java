@@ -153,7 +153,7 @@ public class QueryUtils {
                 String name = currentSource.getString("name");
                 String description = currentSource.getString("description");
                 String url = currentSource.getString("url");
-                String catagory = currentSource.getString("catagory");
+                String category = currentSource.getString("category");
                 String language = currentSource.getString("language");
                 String country = currentSource.getString("country");
                 JSONArray sortBysAvailable = currentSource.getJSONArray("sortBysAvailable");
@@ -180,7 +180,7 @@ public class QueryUtils {
                     sortByAvailable.put("latest", false);
                 }
 
-                Source source = new Source(id, name, description, url, catagory, language, country, sortByAvailable);
+                Source source = new Source(id, name, description, url, category, language, country, sortByAvailable);
                 sources.add(source);
                 SourceRef.push().setValue(source);
             }
