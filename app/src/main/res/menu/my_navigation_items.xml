@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group android:checkableBehavior="single">
+    <group android:checkableBehavior="all">
         <item android:id="@+id/Nav_menu"
               android:title="@string/Nav_Menu_Title"/>
+
         <item android:id="@+id/Trending"
-              android:title="@string/Trending_Title" />
-        <item android:id="@+id/Test"
-              android:title="@string/Test_Title" />
+              android:title="@string/Trending_Title"
+              android:icon="@drawable/trending_icon"
+              android:onClick="getTrendingNews"/>
+
+        <item android:id="@+id/Politics"
+            android:title="Politics"
+            android:icon="@drawable/polotics_icon"/>
+
+        <item android:id="@+id/Tech"
+            android:title="Tech"
+            android:icon="@drawable/tech_icon" />
+
+        <item android:id="@+id/Business"
+            android:title="Business"
+            android:icon="@drawable/business_icon"/>
+
+        <item android:id="@+id/Entertainment"
+            android:title="Entertainment"
+            android:icon="@drawable/entertainment_icon"/>
+
+        <item android:id="@+id/Recent"
+            android:title="Recently Viewed" />
     </group>
 </menu>
