@@ -1,5 +1,6 @@
 package me.cpearce.newsfeed;
 
+import android.app.ActionBar;
 import android.app.LoaderManager;
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +11,7 @@ import android.net.Uri;
 import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -17,6 +19,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -122,7 +125,8 @@ public class MainActivity extends AppCompatActivity
         }
 
         //Initializing NavigationView
-        NavigationView navigationView = (NavigationView) findViewById(R.id.navigation);
+        final NavigationView navigationView = findViewById(R.id.navigation);
+
 
         //Setting Navigation View Item Selected Listener to handle the item click of the navigation menu
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -138,13 +142,18 @@ public class MainActivity extends AppCompatActivity
                     menuItem.setChecked(true);
                 }
 
-                //do nothing for now
+                //Here we reset the loader to fetech data based on which item was clicked
                 switch (menuItem.getItemId()){
                     default:
                         mAdapter.clear();
+                        LoaderManager loaderManager = getLoaderManager();
+                        loaderManager.restartLoader(ARTICLE_LOADER_ID, null, MainActivity.this);
+                        loaderManager.restartLoader(SOURCE_LOADER_ID, null,MainActivity.this);
                         //mAdapter.addAll(QueryUtils.fetchArticleData(TEST_URL));
-                        mAdapter.notifyDataSetChanged();
+                        //mAdapter.notifyDataSetChanged();
+
                 }
+
 
                 return true;
             }
