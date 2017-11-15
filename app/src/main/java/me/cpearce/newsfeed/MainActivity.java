@@ -7,8 +7,12 @@ import android.content.Loader;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -34,6 +38,9 @@ public class MainActivity extends AppCompatActivity
     private static final String NAT_LANGUAGE_REQUEST_ROOT_URL = "https://language.googleapis.com/v1/documents:analyzeEntities?key=AIzaSyAh9uz0qNveHuiNYNBhjanf5gq86Su5rlo";
 
     private static final String SOURCE_REQUEST_URL = "https://newsapi.org/v1/sources?apiKey=23b2fa848a2a45aa85546b463a7afc0a";
+
+    //for testing purospes
+    private static final String TEST_URL = "https://newsapi.org/v1/articles?source=ign&sortBy=top&apiKey=23b2fa848a2a45aa85546b463a7afc0a";
     /**
      * Constant value for the article loader ID. We can choose any integer.
      * This really only comes into play if you're using multiple loaders.
@@ -113,6 +120,35 @@ public class MainActivity extends AppCompatActivity
             // Update empty state with no connection error message
             mEmptyStateTextView.setText(R.string.no_internet_connection);
         }
+
+        //Initializing NavigationView
+        NavigationView navigationView = (NavigationView) findViewById(R.id.navigation);
+
+        //Setting Navigation View Item Selected Listener to handle the item click of the navigation menu
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem menuItem) {
+                //Checking if the item is in checked state or not, if not make it in checked state
+                if(menuItem.isChecked())
+                {
+                    menuItem.setChecked(false);
+                }
+                else
+                {
+                    menuItem.setChecked(true);
+                }
+
+                //do nothing for now
+                switch (menuItem.getItemId()){
+                    default:
+                        mAdapter.clear();
+                        //mAdapter.addAll(QueryUtils.fetchArticleData(TEST_URL));
+                        mAdapter.notifyDataSetChanged();
+                }
+
+                return true;
+            }
+        });
     }
 
     // TODO: refactor to use 3 loaders
@@ -150,5 +186,27 @@ public class MainActivity extends AppCompatActivity
     public void onLoaderReset(Loader<List<Article>> loader) {
         // Loader reset, so we can clear out our existing data.
         mAdapter.clear();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.my_navigation_items, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.navigation) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -2,6 +2,7 @@ package me.cpearce.newsfeed;
 
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;

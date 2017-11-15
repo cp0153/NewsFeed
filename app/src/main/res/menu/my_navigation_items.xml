@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group android:checkableBehavior="all">
+    <group android:checkableBehavior="single">
         <item android:id="@+id/Nav_menu"
               android:title="@string/Nav_Menu_Title"/>
 
         <item android:id="@+id/Trending"
               android:title="@string/Trending_Title"
-              android:icon="@drawable/trending_icon"
-              android:onClick="getTrendingNews"/>
+              android:icon="@drawable/trending_icon" />
 
         <item android:id="@+id/Politics"
             android:title="Politics"
