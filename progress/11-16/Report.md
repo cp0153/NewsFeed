@@ -7,6 +7,6 @@
   
   **Robert Farinelli 01402045**
   * I added icons to each item in the navigation view
-  * created the navigation view ojbect in the code
+  * created the navigation view and menu ojbects in the code
   * added menu item events for each of the items in tha navigation view
   
