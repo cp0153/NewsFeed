@@ -16,4 +16,14 @@
     <!-- Title for the Trending Section of the Nav Menu [CHAR LIMIT=NONE] -->
     <string name="Test_Title">Test</string>
     <string name="news_sections">News Sections</string>
+
+
+    <!-- login and register -->
+    <string name="login_btn_txt">LOGIN</string>
+    <string name="register_btn_txt">REGISTER</string>
+    <string name="email_txt">Email</string>
+    <string name="password_txt">Password</string>
+    <string name="register_user_btn">Register</string>
+    <string name="login_user_btn">Login</string>
+
 </resources>

@@ -218,4 +218,14 @@ public class MainActivity extends AppCompatActivity
 
         return super.onOptionsItemSelected(item);
     }
+
+    public void btnRegistration_Click(View v){
+        Intent i = new Intent(MainActivity.this, RegistrationActivity.class);
+        startActivity(i);
+    }
+
+    public void btnLogin_Click(View v){
+        Intent i = new Intent(MainActivity.this, LoginActivity.class);
+        startActivity(i);
+    }
 }
