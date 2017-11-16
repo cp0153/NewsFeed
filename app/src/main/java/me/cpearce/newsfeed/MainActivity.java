@@ -42,6 +42,16 @@ public class MainActivity extends AppCompatActivity
 
     private static final String SOURCE_REQUEST_URL = "https://newsapi.org/v1/sources?apiKey=23b2fa848a2a45aa85546b463a7afc0a";
 
+    private static final String POLITICS_URL = "https://newsapi.org/v1/sources?category=politics&apiKey=23b2fa848a2a45aa85546b463a7afc0a";
+
+    private static final String TECH_URL = "https://newsapi.org/v1/sources?category=technology&apiKey=23b2fa848a2a45aa85546b463a7afc0a";
+
+    private static final String BUSINESS_URL = "https://newsapi.org/v1/sources?category=business&apiKey=23b2fa848a2a45aa85546b463a7afc0a";
+
+    private static final String ENTERTAINMENT_URL = "https://newsapi.org/v1/sources?category=entertainment&apiKey=23b2fa848a2a45aa85546b463a7afc0a";
+
+    private static String currentSourceUrl = "";
+
     //for testing purospes
     private static final String TEST_URL = "https://newsapi.org/v1/articles?source=ign&sortBy=top&apiKey=23b2fa848a2a45aa85546b463a7afc0a";
     /**
@@ -143,18 +153,29 @@ public class MainActivity extends AppCompatActivity
                 }
 
                 //Here we reset the loader to fetech data based on which item was clicked
-                switch (menuItem.getItemId()){
+                switch (menuItem.getItemId()) {
+                    case R.id.Trending:
+                        //TODO
+                    case R.id.Politics:
+                        currentSourceUrl = POLITICS_URL;
+                        break;
+                    case R.id.Tech:
+                        currentSourceUrl = TECH_URL;
+                        break;
+                    case R.id.Business:
+                        currentSourceUrl = BUSINESS_URL;
+                        break;
+                    case R.id.Entertainment:
+                        currentSourceUrl = ENTERTAINMENT_URL;
                     default:
-                        mAdapter.clear();
-                        LoaderManager loaderManager = getLoaderManager();
-                        loaderManager.restartLoader(ARTICLE_LOADER_ID, null, MainActivity.this);
-                        loaderManager.restartLoader(SOURCE_LOADER_ID, null,MainActivity.this);
-                        //mAdapter.addAll(QueryUtils.fetchArticleData(TEST_URL));
-                        //mAdapter.notifyDataSetChanged();
-
+                        //change the url used the loader
+                        currentSourceUrl = "";
                 }
 
-
+                mAdapter.clear();
+                LoaderManager loaderManager = getLoaderManager();
+                loaderManager.restartLoader(ARTICLE_LOADER_ID, null, MainActivity.this);
+                loaderManager.restartLoader(SOURCE_LOADER_ID, null,MainActivity.this);
                 return true;
             }
         });
@@ -163,11 +184,13 @@ public class MainActivity extends AppCompatActivity
     // TODO: refactor to use 3 loaders
     @Override
     public Loader<List<Article>> onCreateLoader(int i, Bundle bundle) {
+
+
         // Create a new loader for the given URL
-        return new ArticleLoader(this, ARTICLE_REQUEST_ROOT_URL, NAT_LANGUAGE_REQUEST_ROOT_URL);
+        return new ArticleLoader(this, ARTICLE_REQUEST_ROOT_URL, NAT_LANGUAGE_REQUEST_ROOT_URL, currentSourceUrl);
     }
 
-    //    @Override
+        //@Override
 //    public Loader<List<Source>> onCreateLoader(int i, Bundle bundle) {
 //        return new SourceLoader(this, SOURCE_REQUEST_URL);
 //    }
