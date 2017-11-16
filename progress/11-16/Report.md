@@ -10,3 +10,7 @@
   * created the navigation view and menu ojbects in the code
   * added menu item events for each of the items in tha navigation view
   
+ **Jacob Rothmel 01322102**
+ * I added in a login and registration activity
+ * added in Firebase email and password authentication
+ * writing objects to history
