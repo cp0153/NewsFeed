@@ -187,7 +187,7 @@ public class MainActivity extends AppCompatActivity
 
 
         // Create a new loader for the given URL
-        return new ArticleLoader(this, ARTICLE_REQUEST_ROOT_URL, NAT_LANGUAGE_REQUEST_ROOT_URL, currentSourceUrl);
+        return new ArticleLoader(this, ARTICLE_REQUEST_ROOT_URL, NAT_LANGUAGE_REQUEST_ROOT_URL);
     }
 
         //@Override
