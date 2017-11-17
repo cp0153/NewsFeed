@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import me.cpearce.newsfeed.model.Article;
+import me.cpearce.newsfeed.model.Entity;
 import me.cpearce.newsfeed.model.Source;
 
 /**
@@ -69,12 +70,10 @@ public class ArticleLoader extends AsyncTaskLoader<List<Article>> {
 
         // Perform the network request, parse the response, and extract a list of articles.
 
-//        for (int i = 0; i < articles.size(); i++) {
-//            Article article = articles.get(i);
-//            String entities = QueryUtils.fetchEntityData(mMLUrl, article.getmDescription());
-//
-//            article.setmEntites(entities);
-//        }
+        for (int i = 0; i < 20; i++) {
+            Article article = articles.get(i);
+            List<Entity> entities = QueryUtils.fetchEntityData(mMLUrl, article.description);
+        }
         return articles;
     }
 }

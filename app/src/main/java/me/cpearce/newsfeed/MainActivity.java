@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity
      */
     private static final String ARTICLE_REQUEST_ROOT_URL = "https://newsapi.org//v2/top-headlines"; // ?source=google-news&sortBy=top&apiKey=23b2fa848a2a45aa85546b463a7afc0a";
 
-    private static final String NAT_LANGUAGE_REQUEST_ROOT_URL = "https://language.googleapis.com/v1beta2/documents:annotateText"; // ?key=AIzaSyAh9uz0qNveHuiNYNBhjanf5gq86Su5rlo";
+    private static final String NAT_LANGUAGE_REQUEST_ROOT_URL = "https://language.googleapis.com/v1beta2/documents:analyzeEntities"; // ?key=AIzaSyAh9uz0qNveHuiNYNBhjanf5gq86Su5rlo";
 
     private static final String SOURCE_REQUEST_URL = "https://newsapi.org/v2/sources";
 

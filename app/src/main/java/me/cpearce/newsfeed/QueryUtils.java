@@ -32,6 +32,7 @@ import java.util.Map;
 import javax.net.ssl.HttpsURLConnection;
 
 import me.cpearce.newsfeed.model.Article;
+import me.cpearce.newsfeed.model.Entity;
 import me.cpearce.newsfeed.model.Source;
 
 /**
@@ -97,6 +98,23 @@ public class QueryUtils {
         return extractArticles(jsonResponse);
     }
 
+    public static List<Article> fetchEverythingData(String requestUrl, String searchQuery) {
+        URL url = createUrl(requestUrl + "q=" + searchQuery + "&apiKey=" +
+                NEWS_API_KEY);
+
+        String jsonResponse = null;
+        try {
+            jsonResponse = makeGetHttpRequest(url);
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "Problem making the GET HTTP request.", e);
+        }
+
+        // Extract relevant fields from the JSON response and create a list of {@link Articles}s
+
+        // Return the list of {@link Articles}s
+        return extractArticles(jsonResponse);
+    }
+
     public static String getCommaSeparatedSourceList(List<Source> sources) {
         StringBuilder commaList = new StringBuilder("");
         for (int i = 0; i < sources.size(); i++) {
@@ -130,7 +148,7 @@ public class QueryUtils {
         return extractSources(jsonResponse);
     }
 
-    public static String fetchEntityData(String requestUrl, String description) {
+    public static List<Entity> fetchEntityData(String requestUrl, String description) {
         URL url = createUrl(requestUrl + "?key=" + NAT_API_KEY);
 
         String jsonResponse = null;
@@ -142,12 +160,12 @@ public class QueryUtils {
         return extractEntities(jsonResponse);
     }
 
-    private static String extractEntities(String jsonResponse) {
+    private static List<Entity> extractEntities(String jsonResponse) {
         // If the JSON string is empty or null, then return early.
         if (TextUtils.isEmpty(jsonResponse)) {
             return null;
         }
-        StringBuilder entities = new StringBuilder();
+        List<Entity> entities = new ArrayList<>();
 
         // Try to parse the SAMPLE_NEWS_JSON_RESPONSE. If there's a problem with the way the JSON
         // is formatted, a JSONException exception object will be thrown.
@@ -160,24 +178,25 @@ public class QueryUtils {
             for (int i = 0; i < entityArray.length(); i++) {
                 JSONObject currentEntity = entityArray.getJSONObject(i);
                 String entity_name = currentEntity.getString("name");
+                String entity_type = currentEntity.getString("type");
+                int entity_salience = currentEntity.getInt("salience");
                 JSONObject metadata = currentEntity.getJSONObject("metadata");
+                Map<String, String> wikiLinks = new HashMap<>();
                 if (metadata.has("wikipedia_url")) {
-                    String wikipedia_url = metadata.getString("wikipedia_url");
-                    entities.append(wikipedia_url);
-                    entities.append(", ");
-                } else {
-                    entities.append(entity_name);
-                    entities.append(", ");
-                }
-            }
 
+                    String wikipedia_url = metadata.getString("wikipedia_url");
+                    wikiLinks.put("wikipedia_url", wikipedia_url);
+                }
+                Entity entity = new Entity(entity_name, entity_type, wikiLinks, entity_salience);
+                entities.add(entity);
+            }
         } catch (JSONException e) {
             // If an error is thrown when executing any of the above statements in the "try" block,
             // catch the exception here, so the app doesn't crash. Print a log message
             // with the message from the exception.
             Log.e("QueryUtils", "Problem parsing the article JSON results", e);
         }
-        return entities.toString().substring(0, entities.length() - 2);
+        return entities;
     }
 
     private static List<Source> extractSources(String sourcesJSON) {
