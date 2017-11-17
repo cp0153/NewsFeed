@@ -16,8 +16,6 @@ public class Source {
     private String mCategory;
     private String mLanguage;
     private String mCountry;
-    private Map<String, Boolean> mSortBysAvailable;
-
 
     /**
      * Constructs a new {@link Source} object.
@@ -35,11 +33,9 @@ public class Source {
      *                         written in. Possible options: en, de, fr
      * @param country          The 2-letter ISO 3166-1 code of the country that the source mainly
      *                         focuses on.
-     * @param sortBysAvailable The available headline lists for the news source. The possible
-     *                         options are top, latest and popular.
      */
     public Source(String id, String name, String description, String url, String category,
-                  String language, String country, Map<String, Boolean> sortBysAvailable) {
+                  String language, String country) {
         mId = id;
         mName = name;
         mDescription = description;
@@ -47,7 +43,6 @@ public class Source {
         mCategory = category;
         mLanguage = language;
         mCountry = country;
-        mSortBysAvailable = sortBysAvailable;
     }
 
     public String getmId() {
@@ -78,5 +73,4 @@ public class Source {
         return mCountry;
     }
 
-    public HashMap mSortBysAvailable() { return (HashMap) mSortBysAvailable; }
 }
