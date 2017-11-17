@@ -1,6 +1,7 @@
 package me.cpearce.newsfeed;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,45 +54,48 @@ public class ArticleAdapter extends ArrayAdapter<Article> {
         // Find the article at the given position in the list of articles
         Article currentArticle = getItem(position);
 
-        String title = currentArticle.getmTitle();
+        String title = currentArticle.title;
 
         // Find the TextView with view ID location
         TextView articleView = (TextView) listItemView.findViewById(R.id.article_title);
         // Display the location of the current article in that TextView
         articleView.setText(title);
 
-        if (!currentArticle.getmAuthor().equals("null")) {
-            String author = "by " + currentArticle.getmAuthor();
+        if (!currentArticle.author.equals("null")) {
+            String author = "by " + currentArticle.author;
             TextView authorView = (TextView) listItemView.findViewById(R.id.article_author);
             authorView.setText(author);
         }
 
        // Find the TextView with view ID description
-        String description = currentArticle.getmDescription();
+        String description = currentArticle.description;
         TextView descriptionView = (TextView) listItemView.findViewById(R.id.description);
         // Display the description of the current article in that TextView
         descriptionView.setText(description);
 
-        String entities = "categories:\n" + currentArticle.getmEntities();
-        TextView entitiesView = (TextView) listItemView.findViewById(R.id.entities);
-        entitiesView.setText(entities);
+//        String entities = "categories:\n" + currentArticle.getmEntities();
+//        TextView entitiesView = (TextView) listItemView.findViewById(R.id.entities);
+//        entitiesView.setText(entities);
 
         // Create a new Date object from the time in milliseconds of the article
-        String date = currentArticle.getmPublishedAt();
+        String date = currentArticle.publishedAt;
+        if (date.length() > 4) {
+            // Find the TextView with view ID date
+            TextView dateView = (TextView) listItemView.findViewById(R.id.date);
+            // Format the date string (i.e. "Mar 3, 1984")
+            String formattedDate = date.substring(0, 9);
+            // Display the date of the current article in that TextView
+            dateView.setText(formattedDate);
 
-        // Find the TextView with view ID date
-        TextView dateView = (TextView) listItemView.findViewById(R.id.date);
-        // Format the date string (i.e. "Mar 3, 1984")
-        String formattedDate = date.substring(0, 9);
-        // Display the date of the current article in that TextView
-        dateView.setText(formattedDate);
+            // Find the TextView with view ID time
+            TextView timeView = (TextView) listItemView.findViewById(R.id.time);
+            // Format the time string (i.e. "4:30PM")
+            String formattedTime = date.substring(11, date.length() - 1);
+            // Display the time of the current article in that TextView
+            timeView.setText(formattedTime);
+        }
 
-        // Find the TextView with view ID time
-        TextView timeView = (TextView) listItemView.findViewById(R.id.time);
-        // Format the time string (i.e. "4:30PM")
-        String formattedTime = date.substring(11, date.length() - 1);
-        // Display the time of the current article in that TextView
-        timeView.setText(formattedTime);
+
 
         // Return the list item view that is now showing the appropriate data
         return listItemView;

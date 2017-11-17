@@ -36,13 +36,15 @@ public class MainActivity extends AppCompatActivity
     /**
      * URL for the https://newsapi.org
      */
-    private static final String ARTICLE_REQUEST_ROOT_URL = "https://newsapi.org/v1/articles?source=google-news&sortBy=top&apiKey=23b2fa848a2a45aa85546b463a7afc0a";
+    private static final String ARTICLE_REQUEST_ROOT_URL = "https://newsapi.org//v2/top-headlines"; // ?source=google-news&sortBy=top&apiKey=23b2fa848a2a45aa85546b463a7afc0a";
 
-    private static final String NAT_LANGUAGE_REQUEST_ROOT_URL = "https://language.googleapis.com/v1/documents:analyzeEntities?key=AIzaSyAh9uz0qNveHuiNYNBhjanf5gq86Su5rlo";
+    private static final String NAT_LANGUAGE_REQUEST_ROOT_URL = "https://language.googleapis.com/v1beta2/documents:annotateText"; // ?key=AIzaSyAh9uz0qNveHuiNYNBhjanf5gq86Su5rlo";
 
-    private static final String SOURCE_REQUEST_URL = "https://newsapi.org/v1/sources?apiKey=23b2fa848a2a45aa85546b463a7afc0a";
+    private static final String SOURCE_REQUEST_URL = "https://newsapi.org/v2/sources";
 
-    //for testing purospes
+    private static final String EVERYTHING_REQUEST_URL = "https://newsapi.org//v2/everything";
+
+    //for testing purposes
     private static final String TEST_URL = "https://newsapi.org/v1/articles?source=ign&sortBy=top&apiKey=23b2fa848a2a45aa85546b463a7afc0a";
     /**
      * Constant value for the article loader ID. We can choose any integer.
@@ -87,7 +89,7 @@ public class MainActivity extends AppCompatActivity
                 Article currentArticle = mAdapter.getItem(position);
 
                 // Convert the String URL into a URI object (to pass into the Intent constructor)
-                Uri articleUri = Uri.parse(currentArticle.getmUrl());
+                Uri articleUri = Uri.parse(currentArticle.url);
 
                 // Create a new intent to view the article URI
                 Intent websiteIntent = new Intent(Intent.ACTION_VIEW, articleUri);
@@ -164,7 +166,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public Loader<List<Article>> onCreateLoader(int i, Bundle bundle) {
         // Create a new loader for the given URL
-        return new ArticleLoader(this, ARTICLE_REQUEST_ROOT_URL, NAT_LANGUAGE_REQUEST_ROOT_URL);
+        return new ArticleLoader(this, ARTICLE_REQUEST_ROOT_URL, NAT_LANGUAGE_REQUEST_ROOT_URL, SOURCE_REQUEST_URL);
     }
 
     //    @Override

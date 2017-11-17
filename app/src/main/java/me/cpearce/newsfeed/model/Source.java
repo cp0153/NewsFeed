@@ -1,21 +1,18 @@
 package me.cpearce.newsfeed.model;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Created by Christopher on 11/8/2017.
  * Class for a source
  */
 
 public class Source {
-    private String mId;
-    private String mName;
-    private String mDescription;
-    private String mUrl;
-    private String mCategory;
-    private String mLanguage;
-    private String mCountry;
+    public final String id;
+    public final String name;
+    public final String description;
+    public final String url;
+    public final String category;
+    public final String language;
+    public final String country;
 
     /**
      * Constructs a new {@link Source} object.
@@ -36,41 +33,12 @@ public class Source {
      */
     public Source(String id, String name, String description, String url, String category,
                   String language, String country) {
-        mId = id;
-        mName = name;
-        mDescription = description;
-        mUrl = url;
-        mCategory = category;
-        mLanguage = language;
-        mCountry = country;
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.url = url;
+        this.category = category;
+        this.language = language;
+        this.country = country;
     }
-
-    public String getmId() {
-        return mId;
-    }
-
-    public String getmName() {
-        return mName;
-    }
-
-    public String getmDescription() {
-        return mDescription;
-    }
-
-    public String getmUrl() {
-        return mUrl;
-    }
-
-    public String getmCategory() {
-        return mCategory;
-    }
-
-    public String getmLanguage() {
-        return mLanguage;
-    }
-
-    public String getmCountry() {
-        return mCountry;
-    }
-
 }

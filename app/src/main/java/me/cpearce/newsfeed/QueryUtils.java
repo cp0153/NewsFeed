@@ -2,7 +2,6 @@ package me.cpearce.newsfeed;
 
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.View;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -53,8 +52,19 @@ public class QueryUtils {
      */
     private QueryUtils() {
     }
+    private static final FirebaseDatabase database = FirebaseDatabase.getInstance();
+    // private static final DatabaseReference NEWS_API_KEY = database.getReference("apiKey").child("newsapi");
+    // private static final DatabaseReference NAT_API_KEY = database.getReference("apiKey").child("google");
+    private static final String NEWS_API_KEY = "23b2fa848a2a45aa85546b463a7afc0a";
+    private static final String NAT_API_KEY = "AIzaSyAh9uz0qNveHuiNYNBhjanf5gq86Su5rlo";
 
-    public static List<Article> fetchArticleData(String requestUrl) {
+
+    public static List<Article> fetchArticleData(String requestUrl, List<Source> sources) {
+         requestUrl = requestUrl + "?sources=" +
+                getCommaSeparatedSourceList(sources) +
+                "&apiKey=" +
+                NEWS_API_KEY;
+
         URL url = createUrl(requestUrl);
 
         String jsonResponse = null;
@@ -70,7 +80,46 @@ public class QueryUtils {
         return extractArticles(jsonResponse);
     }
 
+    public static List<Article> fetchArticleData(String requestUrl) {
+        URL url = createUrl(requestUrl + "&apiKey=" +
+                NEWS_API_KEY);
+
+        String jsonResponse = null;
+        try {
+            jsonResponse = makeGetHttpRequest(url);
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "Problem making the GET HTTP request.", e);
+        }
+
+        // Extract relevant fields from the JSON response and create a list of {@link Articles}s
+
+        // Return the list of {@link Articles}s
+        return extractArticles(jsonResponse);
+    }
+
+    public static String getCommaSeparatedSourceList(List<Source> sources) {
+        StringBuilder commaList = new StringBuilder("");
+        for (int i = 0; i < sources.size(); i++) {
+            commaList.append(sources.get(i).id);
+            commaList.append(",");
+        }
+        return commaList.toString();
+    }
+
     public static List<Source> fetchSourceData(String requestUrl) {
+        URL url = createUrl(requestUrl + "?apiKey=" + NEWS_API_KEY);
+        String jsonResponse = null;
+        try {
+            jsonResponse = makeGetHttpRequest(url);
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "Problem making the GET HTTP request.", e);
+        }
+        return extractSources(jsonResponse);
+    }
+
+    public static List<Source> fetchSourceData(String requestUrl, String category) {
+        requestUrl = requestUrl + "?category=" + category + "&apiKey=" +
+                NEWS_API_KEY;
         URL url = createUrl(requestUrl);
         String jsonResponse = null;
         try {
@@ -81,13 +130,9 @@ public class QueryUtils {
         return extractSources(jsonResponse);
     }
 
-//    public static List<Source> fetchSourceData(String requestUrl, String cataegory, String language,
-//                                               String country) {
-//        StringBuilder temp_url = requestUrl + "?catagory=" + cataegory + language + country
-//    }
-
     public static String fetchEntityData(String requestUrl, String description) {
-        URL url = createUrl(requestUrl);
+        URL url = createUrl(requestUrl + "?key=" + NAT_API_KEY);
+
         String jsonResponse = null;
         try {
             jsonResponse = makePostHttpRequest(url, description);
@@ -157,31 +202,8 @@ public class QueryUtils {
                 String category = currentSource.getString("category");
                 String language = currentSource.getString("language");
                 String country = currentSource.getString("country");
-                JSONArray sortBysAvailable = currentSource.getJSONArray("sortBysAvailable");
-                List<String> sortBysAvailableList = new ArrayList<String>();
-                for (int j = 0; j < sortBysAvailable.length(); j++) {
-                    sortBysAvailableList.add(sortBysAvailable.getString(j));
-                }
-                Map<String, Boolean> sortByAvailable = new HashMap<String, Boolean>();
-                if (sortBysAvailableList.contains("top")) {
-                    sortByAvailable.put("top", true);
-                } else {
-                    sortByAvailable.put("top", false);
-                }
 
-                if (sortBysAvailableList.contains("top")) {
-                    sortByAvailable.put("latest", true);
-                } else {
-                    sortByAvailable.put("latest", false);
-                }
-
-                if (sortBysAvailableList.contains("top")) {
-                    sortByAvailable.put("latest", true);
-                } else {
-                    sortByAvailable.put("latest", false);
-                }
-
-                Source source = new Source(id, name, description, url, category, language, country, sortByAvailable);
+                Source source = new Source(id, name, description, url, category, language, country);
                 sources.add(source);
                 SourceRef.push().setValue(source);
             }
@@ -190,7 +212,6 @@ public class QueryUtils {
         }
         return sources;
     }
-
 
     private static URL createUrl(String stringUrl) {
         URL url = null;
@@ -392,8 +413,12 @@ public class QueryUtils {
                 String url = currentArticle.getString("url");
                 String urlToImage = currentArticle.getString("urlToImage");
                 String publishedAt = currentArticle.getString("publishedAt");
+                JSONObject currentSource = currentArticle.getJSONObject("source");
+                String sourceId = currentSource.getString("id");
+                String sourceName = currentSource.getString("name");
 
-                Article article = new Article(author, title, description, url, urlToImage, publishedAt, entities);
+
+                Article article = new Article(sourceId, sourceName, author, title, description, url, urlToImage, publishedAt);
                 articles.add(article);
                 myRef.push().setValue(article);
             }
