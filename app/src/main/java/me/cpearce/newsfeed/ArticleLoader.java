@@ -57,23 +57,29 @@ public class ArticleLoader extends AsyncTaskLoader<List<Article>> {
 
         List<Source> sources = QueryUtils.fetchSourceData(mSourceUrl);
 
-        // max possible sources that can be queried at once are 20 so
-        List<List<Source>> partitions = new ArrayList<>();
-
-        for (int i = 0; i < sources.size(); i+= 5){
-            partitions.add(sources.subList(i, Math.min(i + 5, sources.size())));
-        }
+        // max possible sources that can be queried at once are 5
+        // commenting this out because it returns several thousand articles all at once
+//        List<List<Source>> partitions = new ArrayList<>();
+//
+//        for (int i = 0; i < sources.size(); i+= 5){
+//            partitions.add(sources.subList(i, Math.min(i + 5, sources.size())));
+//        }
+//        List<Article> articles = new ArrayList<>();
+//        for (List<Source> list : partitions) {
+//            articles.addAll(QueryUtils.fetchArticleData(mNewsUrl, list));
+//        }
         List<Article> articles = new ArrayList<>();
-        for (List<Source> list : partitions) {
-            articles.addAll(QueryUtils.fetchArticleData(mNewsUrl, list));
-        }
+        articles.addAll(QueryUtils.fetchArticleData(mNewsUrl, sources.subList(0, 4)));
 
         // Perform the network request, parse the response, and extract a list of articles.
 
-        for (int i = 0; i < 20; i++) {
-            Article article = articles.get(i);
-            List<Entity> entities = QueryUtils.fetchEntityData(mMLUrl, article.description);
-        }
+        // query entities here, currently not doing anything with entities
+        // TODO: setup frontend display with entities and articles
+//        List<Entity> entities = new ArrayList<>();
+//        for (int i = 0; i < articles.size(); i++) {
+//            Article article = articles.get(i);
+//            entities.addAll(QueryUtils.fetchEntityData(mMLUrl, article.description));
+//        }
         return articles;
     }
 }
