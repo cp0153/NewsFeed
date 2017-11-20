@@ -125,7 +125,7 @@ public class QueryUtils {
     }
 
     public static List<Source> fetchSourceData(String requestUrl) {
-        URL url = createUrl(requestUrl + "?apiKey=" + NEWS_API_KEY);
+        URL url = createUrl(requestUrl + ((requestUrl.contains("?")) ? "&" : "?") + "apiKey=" + NEWS_API_KEY);
         String jsonResponse = null;
         try {
             jsonResponse = makeGetHttpRequest(url);

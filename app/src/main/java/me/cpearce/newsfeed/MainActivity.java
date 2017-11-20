@@ -1,6 +1,5 @@
 package me.cpearce.newsfeed;
 
-import android.app.ActionBar;
 import android.app.LoaderManager;
 import android.content.Context;
 import android.content.Intent;
@@ -11,9 +10,7 @@ import android.net.Uri;
 import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -44,8 +41,10 @@ public class MainActivity extends AppCompatActivity
 
     private static final String EVERYTHING_REQUEST_URL = "https://newsapi.org//v2/everything";
 
-    //for testing purposes
-    private static final String TEST_URL = "https://newsapi.org/v1/articles?source=ign&sortBy=top&apiKey=23b2fa848a2a45aa85546b463a7afc0a";
+    private static String currentArticleUrl = ARTICLE_REQUEST_ROOT_URL;
+
+    private static String currrenSourcesUrl = SOURCE_REQUEST_URL;
+
     /**
      * Constant value for the article loader ID. We can choose any integer.
      * This really only comes into play if you're using multiple loaders.
@@ -146,15 +145,36 @@ public class MainActivity extends AppCompatActivity
 
                 //Here we reset the loader to fetech data based on which item was clicked
                 switch (menuItem.getItemId()){
-                    default:
-                        mAdapter.clear();
-                        LoaderManager loaderManager = getLoaderManager();
-                        loaderManager.restartLoader(ARTICLE_LOADER_ID, null, MainActivity.this);
-                        loaderManager.restartLoader(SOURCE_LOADER_ID, null,MainActivity.this);
-                        //mAdapter.addAll(QueryUtils.fetchArticleData(TEST_URL));
-                        //mAdapter.notifyDataSetChanged();
 
+                    case R.id.Politics:
+                        currentArticleUrl = EVERYTHING_REQUEST_URL;
+                        currrenSourcesUrl = SOURCE_REQUEST_URL + "?category=politics";
+                        break;
+
+                    case R.id.Tech:
+                        currentArticleUrl = EVERYTHING_REQUEST_URL;
+                        currrenSourcesUrl = SOURCE_REQUEST_URL + "?category=technology";
+                        break;
+
+                    case R.id.Business:
+                        currentArticleUrl = EVERYTHING_REQUEST_URL;
+                        currrenSourcesUrl = SOURCE_REQUEST_URL + "?category=business";
+                        break;
+
+                    case R.id.Entertainment:
+                        currentArticleUrl = EVERYTHING_REQUEST_URL;
+                        currrenSourcesUrl = SOURCE_REQUEST_URL + "?category=entertainment";
+                        break;
+
+                    default:
+                        currentArticleUrl = ARTICLE_REQUEST_ROOT_URL;
+                        currrenSourcesUrl = SOURCE_REQUEST_URL;
+                        break;
                 }
+                mAdapter.clear();
+                LoaderManager loaderManager = getLoaderManager();
+                loaderManager.restartLoader(ARTICLE_LOADER_ID, null, MainActivity.this);
+                loaderManager.restartLoader(SOURCE_LOADER_ID, null,MainActivity.this);
 
 
                 return true;
@@ -166,7 +186,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public Loader<List<Article>> onCreateLoader(int i, Bundle bundle) {
         // Create a new loader for the given URL
-        return new ArticleLoader(this, ARTICLE_REQUEST_ROOT_URL, NAT_LANGUAGE_REQUEST_ROOT_URL, SOURCE_REQUEST_URL);
+        return new ArticleLoader(this, currentArticleUrl, NAT_LANGUAGE_REQUEST_ROOT_URL, currrenSourcesUrl);
     }
 
     //    @Override

@@ -20,6 +20,8 @@ public class ArticleLoader extends AsyncTaskLoader<List<Article>> {
     /** Tag for log messages */
     private static final String LOG_TAG = ArticleLoader.class.getName();
 
+    private static final int ARTICLES_MAX_SIZE = 20;
+
     /** Query URL */
     private String mNewsUrl;
     /** Query URL */
@@ -57,6 +59,7 @@ public class ArticleLoader extends AsyncTaskLoader<List<Article>> {
 
         List<Source> sources = QueryUtils.fetchSourceData(mSourceUrl);
 
+
         // max possible sources that can be queried at once are 5
         // commenting this out because it returns several thousand articles all at once
 //        List<List<Source>> partitions = new ArrayList<>();
@@ -69,7 +72,9 @@ public class ArticleLoader extends AsyncTaskLoader<List<Article>> {
 //            articles.addAll(QueryUtils.fetchArticleData(mNewsUrl, list));
 //        }
         List<Article> articles = new ArrayList<>();
-        articles.addAll(QueryUtils.fetchArticleData(mNewsUrl, sources.subList(0, 4)));
+
+        articles.addAll(QueryUtils.fetchArticleData(mNewsUrl, sources.subList(0,4)));
+
 
         // Perform the network request, parse the response, and extract a list of articles.
 
