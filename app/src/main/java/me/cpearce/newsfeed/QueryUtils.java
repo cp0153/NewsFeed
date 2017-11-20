@@ -2,7 +2,6 @@ package me.cpearce.newsfeed;
 
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.View;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -33,6 +32,7 @@ import java.util.Map;
 import javax.net.ssl.HttpsURLConnection;
 
 import me.cpearce.newsfeed.model.Article;
+import me.cpearce.newsfeed.model.Entity;
 import me.cpearce.newsfeed.model.Source;
 
 /**
@@ -53,8 +53,19 @@ public class QueryUtils {
      */
     private QueryUtils() {
     }
+    private static final FirebaseDatabase database = FirebaseDatabase.getInstance();
+    // private static final DatabaseReference NEWS_API_KEY = database.getReference("apiKey").child("newsapi");
+    // private static final DatabaseReference NAT_API_KEY = database.getReference("apiKey").child("google");
+    private static final String NEWS_API_KEY = "23b2fa848a2a45aa85546b463a7afc0a";
+    private static final String NAT_API_KEY = "AIzaSyAh9uz0qNveHuiNYNBhjanf5gq86Su5rlo";
 
-    public static List<Article> fetchArticleData(String requestUrl) {
+
+    public static List<Article> fetchArticleData(String requestUrl, List<Source> sources) {
+         requestUrl = requestUrl + "?sources=" +
+                getCommaSeparatedSourceList(sources) +
+                "&apiKey=" +
+                NEWS_API_KEY;
+
         URL url = createUrl(requestUrl);
 
         String jsonResponse = null;
@@ -70,7 +81,63 @@ public class QueryUtils {
         return extractArticles(jsonResponse);
     }
 
+    public static List<Article> fetchArticleData(String requestUrl) {
+        URL url = createUrl(requestUrl + "&apiKey=" +
+                NEWS_API_KEY);
+
+        String jsonResponse = null;
+        try {
+            jsonResponse = makeGetHttpRequest(url);
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "Problem making the GET HTTP request.", e);
+        }
+
+        // Extract relevant fields from the JSON response and create a list of {@link Articles}s
+
+        // Return the list of {@link Articles}s
+        return extractArticles(jsonResponse);
+    }
+
+    public static List<Article> fetchEverythingData(String requestUrl, String searchQuery) {
+        URL url = createUrl(requestUrl + "q=" + searchQuery + "&apiKey=" +
+                NEWS_API_KEY);
+
+        String jsonResponse = null;
+        try {
+            jsonResponse = makeGetHttpRequest(url);
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "Problem making the GET HTTP request.", e);
+        }
+
+        // Extract relevant fields from the JSON response and create a list of {@link Articles}s
+
+        // Return the list of {@link Articles}s
+        return extractArticles(jsonResponse);
+    }
+
+    public static String getCommaSeparatedSourceList(List<Source> sources) {
+        StringBuilder commaList = new StringBuilder("");
+        for (int i = 0; i < sources.size(); i++) {
+            commaList.append(sources.get(i).id);
+            commaList.append(",");
+        }
+        return commaList.toString();
+    }
+
     public static List<Source> fetchSourceData(String requestUrl) {
+        URL url = createUrl(requestUrl + "?apiKey=" + NEWS_API_KEY);
+        String jsonResponse = null;
+        try {
+            jsonResponse = makeGetHttpRequest(url);
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "Problem making the GET HTTP request.", e);
+        }
+        return extractSources(jsonResponse);
+    }
+
+    public static List<Source> fetchSourceData(String requestUrl, String category) {
+        requestUrl = requestUrl + "?category=" + category + "&apiKey=" +
+                NEWS_API_KEY;
         URL url = createUrl(requestUrl);
         String jsonResponse = null;
         try {
@@ -81,13 +148,9 @@ public class QueryUtils {
         return extractSources(jsonResponse);
     }
 
-//    public static List<Source> fetchSourceData(String requestUrl, String cataegory, String language,
-//                                               String country) {
-//        StringBuilder temp_url = requestUrl + "?catagory=" + cataegory + language + country
-//    }
+    public static List<Entity> fetchEntityData(String requestUrl, String description) {
+        URL url = createUrl(requestUrl + "?key=" + NAT_API_KEY);
 
-    public static String fetchEntityData(String requestUrl, String description) {
-        URL url = createUrl(requestUrl);
         String jsonResponse = null;
         try {
             jsonResponse = makePostHttpRequest(url, description);
@@ -97,12 +160,12 @@ public class QueryUtils {
         return extractEntities(jsonResponse);
     }
 
-    private static String extractEntities(String jsonResponse) {
+    private static List<Entity> extractEntities(String jsonResponse) {
         // If the JSON string is empty or null, then return early.
         if (TextUtils.isEmpty(jsonResponse)) {
             return null;
         }
-        StringBuilder entities = new StringBuilder();
+        List<Entity> entities = new ArrayList<>();
 
         // Try to parse the SAMPLE_NEWS_JSON_RESPONSE. If there's a problem with the way the JSON
         // is formatted, a JSONException exception object will be thrown.
@@ -115,24 +178,25 @@ public class QueryUtils {
             for (int i = 0; i < entityArray.length(); i++) {
                 JSONObject currentEntity = entityArray.getJSONObject(i);
                 String entity_name = currentEntity.getString("name");
+                String entity_type = currentEntity.getString("type");
+                int entity_salience = currentEntity.getInt("salience");
                 JSONObject metadata = currentEntity.getJSONObject("metadata");
+                Map<String, String> wikiLinks = new HashMap<>();
                 if (metadata.has("wikipedia_url")) {
-                    String wikipedia_url = metadata.getString("wikipedia_url");
-                    entities.append(wikipedia_url);
-                    entities.append(", ");
-                } else {
-                    entities.append(entity_name);
-                    entities.append(", ");
-                }
-            }
 
+                    String wikipedia_url = metadata.getString("wikipedia_url");
+                    wikiLinks.put("wikipedia_url", wikipedia_url);
+                }
+                Entity entity = new Entity(entity_name, entity_type, wikiLinks, entity_salience);
+                entities.add(entity);
+            }
         } catch (JSONException e) {
             // If an error is thrown when executing any of the above statements in the "try" block,
             // catch the exception here, so the app doesn't crash. Print a log message
             // with the message from the exception.
             Log.e("QueryUtils", "Problem parsing the article JSON results", e);
         }
-        return entities.toString().substring(0, entities.length() - 2);
+        return entities;
     }
 
     private static List<Source> extractSources(String sourcesJSON) {
@@ -157,31 +221,8 @@ public class QueryUtils {
                 String category = currentSource.getString("category");
                 String language = currentSource.getString("language");
                 String country = currentSource.getString("country");
-                JSONArray sortBysAvailable = currentSource.getJSONArray("sortBysAvailable");
-                List<String> sortBysAvailableList = new ArrayList<String>();
-                for (int j = 0; j < sortBysAvailable.length(); j++) {
-                    sortBysAvailableList.add(sortBysAvailable.getString(j));
-                }
-                Map<String, Boolean> sortByAvailable = new HashMap<String, Boolean>();
-                if (sortBysAvailableList.contains("top")) {
-                    sortByAvailable.put("top", true);
-                } else {
-                    sortByAvailable.put("top", false);
-                }
 
-                if (sortBysAvailableList.contains("top")) {
-                    sortByAvailable.put("latest", true);
-                } else {
-                    sortByAvailable.put("latest", false);
-                }
-
-                if (sortBysAvailableList.contains("top")) {
-                    sortByAvailable.put("latest", true);
-                } else {
-                    sortByAvailable.put("latest", false);
-                }
-
-                Source source = new Source(id, name, description, url, category, language, country, sortByAvailable);
+                Source source = new Source(id, name, description, url, category, language, country);
                 sources.add(source);
                 SourceRef.push().setValue(source);
             }
@@ -190,7 +231,6 @@ public class QueryUtils {
         }
         return sources;
     }
-
 
     private static URL createUrl(String stringUrl) {
         URL url = null;
@@ -392,8 +432,12 @@ public class QueryUtils {
                 String url = currentArticle.getString("url");
                 String urlToImage = currentArticle.getString("urlToImage");
                 String publishedAt = currentArticle.getString("publishedAt");
+                JSONObject currentSource = currentArticle.getJSONObject("source");
+                String sourceId = currentSource.getString("id");
+                String sourceName = currentSource.getString("name");
 
-                Article article = new Article(author, title, description, url, urlToImage, publishedAt, entities);
+
+                Article article = new Article(sourceId, sourceName, author, title, description, url, urlToImage, publishedAt);
                 articles.add(article);
                 myRef.push().setValue(article);
             }

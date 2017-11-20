@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "422822670289-to0eivdvajdqge3ub8bt5ioc70btg7q6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "me.cpearce.newsfeed",
+            "certificate_hash": "fb23d2cd47d49e94eb4c5746786679985632aaeb"
+          }
+        },
+        {
           "client_id": "422822670289-dsnimcorcgh4if9sjpv1kfllf8kf8k54.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

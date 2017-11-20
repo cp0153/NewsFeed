@@ -36,23 +36,15 @@ public class MainActivity extends AppCompatActivity
     /**
      * URL for the https://newsapi.org
      */
-    private static final String ARTICLE_REQUEST_ROOT_URL = "https://newsapi.org/v1/articles?source=google-news&sortBy=top&apiKey=23b2fa848a2a45aa85546b463a7afc0a";
+    private static final String ARTICLE_REQUEST_ROOT_URL = "https://newsapi.org//v2/top-headlines"; // ?source=google-news&sortBy=top&apiKey=23b2fa848a2a45aa85546b463a7afc0a";
 
-    private static final String NAT_LANGUAGE_REQUEST_ROOT_URL = "https://language.googleapis.com/v1/documents:analyzeEntities?key=AIzaSyAh9uz0qNveHuiNYNBhjanf5gq86Su5rlo";
+    private static final String NAT_LANGUAGE_REQUEST_ROOT_URL = "https://language.googleapis.com/v1beta2/documents:analyzeEntities"; // ?key=AIzaSyAh9uz0qNveHuiNYNBhjanf5gq86Su5rlo";
 
-    private static final String SOURCE_REQUEST_URL = "https://newsapi.org/v1/sources?apiKey=23b2fa848a2a45aa85546b463a7afc0a";
+    private static final String SOURCE_REQUEST_URL = "https://newsapi.org/v2/sources";
 
-    private static final String POLITICS_URL = "https://newsapi.org/v1/sources?category=politics&apiKey=23b2fa848a2a45aa85546b463a7afc0a";
+    private static final String EVERYTHING_REQUEST_URL = "https://newsapi.org//v2/everything";
 
-    private static final String TECH_URL = "https://newsapi.org/v1/sources?category=technology&apiKey=23b2fa848a2a45aa85546b463a7afc0a";
-
-    private static final String BUSINESS_URL = "https://newsapi.org/v1/sources?category=business&apiKey=23b2fa848a2a45aa85546b463a7afc0a";
-
-    private static final String ENTERTAINMENT_URL = "https://newsapi.org/v1/sources?category=entertainment&apiKey=23b2fa848a2a45aa85546b463a7afc0a";
-
-    private static String currentSourceUrl = "";
-
-    //for testing purospes
+    //for testing purposes
     private static final String TEST_URL = "https://newsapi.org/v1/articles?source=ign&sortBy=top&apiKey=23b2fa848a2a45aa85546b463a7afc0a";
     /**
      * Constant value for the article loader ID. We can choose any integer.
@@ -97,7 +89,7 @@ public class MainActivity extends AppCompatActivity
                 Article currentArticle = mAdapter.getItem(position);
 
                 // Convert the String URL into a URI object (to pass into the Intent constructor)
-                Uri articleUri = Uri.parse(currentArticle.getmUrl());
+                Uri articleUri = Uri.parse(currentArticle.url);
 
                 // Create a new intent to view the article URI
                 Intent websiteIntent = new Intent(Intent.ACTION_VIEW, articleUri);
@@ -153,29 +145,18 @@ public class MainActivity extends AppCompatActivity
                 }
 
                 //Here we reset the loader to fetech data based on which item was clicked
-                switch (menuItem.getItemId()) {
-                    case R.id.Trending:
-                        //TODO
-                    case R.id.Politics:
-                        currentSourceUrl = POLITICS_URL;
-                        break;
-                    case R.id.Tech:
-                        currentSourceUrl = TECH_URL;
-                        break;
-                    case R.id.Business:
-                        currentSourceUrl = BUSINESS_URL;
-                        break;
-                    case R.id.Entertainment:
-                        currentSourceUrl = ENTERTAINMENT_URL;
+                switch (menuItem.getItemId()){
                     default:
-                        //change the url used the loader
-                        currentSourceUrl = "";
+                        mAdapter.clear();
+                        LoaderManager loaderManager = getLoaderManager();
+                        loaderManager.restartLoader(ARTICLE_LOADER_ID, null, MainActivity.this);
+                        loaderManager.restartLoader(SOURCE_LOADER_ID, null,MainActivity.this);
+                        //mAdapter.addAll(QueryUtils.fetchArticleData(TEST_URL));
+                        //mAdapter.notifyDataSetChanged();
+
                 }
 
-                mAdapter.clear();
-                LoaderManager loaderManager = getLoaderManager();
-                loaderManager.restartLoader(ARTICLE_LOADER_ID, null, MainActivity.this);
-                loaderManager.restartLoader(SOURCE_LOADER_ID, null,MainActivity.this);
+
                 return true;
             }
         });
@@ -184,13 +165,11 @@ public class MainActivity extends AppCompatActivity
     // TODO: refactor to use 3 loaders
     @Override
     public Loader<List<Article>> onCreateLoader(int i, Bundle bundle) {
-
-
         // Create a new loader for the given URL
-        return new ArticleLoader(this, ARTICLE_REQUEST_ROOT_URL, NAT_LANGUAGE_REQUEST_ROOT_URL);
+        return new ArticleLoader(this, ARTICLE_REQUEST_ROOT_URL, NAT_LANGUAGE_REQUEST_ROOT_URL, SOURCE_REQUEST_URL);
     }
 
-        //@Override
+    //    @Override
 //    public Loader<List<Source>> onCreateLoader(int i, Bundle bundle) {
 //        return new SourceLoader(this, SOURCE_REQUEST_URL);
 //    }
@@ -240,5 +219,15 @@ public class MainActivity extends AppCompatActivity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void btnRegistration_Click(View v){
+        Intent i = new Intent(MainActivity.this, RegistrationActivity.class);
+        startActivity(i);
+    }
+
+    public void btnLogin_Click(View v){
+        Intent i = new Intent(MainActivity.this, LoginActivity.class);
+        startActivity(i);
     }
 }
