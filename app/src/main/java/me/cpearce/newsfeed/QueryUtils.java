@@ -450,4 +450,9 @@ public class QueryUtils {
         }
         return articles;
     }
+
+    public List<String> fetchCategoryData()
+    {
+        return new ArrayList<String>();
+    }
 }

@@ -73,7 +73,7 @@ public class ArticleLoader extends AsyncTaskLoader<List<Article>> {
 //        }
         List<Article> articles = new ArrayList<>();
 
-        articles.addAll(QueryUtils.fetchArticleData(mNewsUrl, sources.subList(0,4)));
+        articles.addAll(QueryUtils.fetchArticleData(mNewsUrl,((sources.size() < 5) ? sources : sources.subList(0,4))));
 
 
         // Perform the network request, parse the response, and extract a list of articles.

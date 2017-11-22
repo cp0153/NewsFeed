@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.ArraySet;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,9 +20,12 @@ import android.widget.TextView;
 
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import me.cpearce.newsfeed.model.Article;
+import me.cpearce.newsfeed.model.Source;
 
 public class MainActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<List<Article>> {
@@ -65,6 +69,9 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.article_activity);
 
+
+        String[] categories ={"business","entertainment","gaming","general","health-and-medical",
+                "music","politics","science-and-nature","sport","technology"};
 
         // Find a reference to the {@link ListView} in the layout
         ListView articleListView = (ListView) findViewById(R.id.list);
@@ -126,7 +133,16 @@ public class MainActivity extends AppCompatActivity
         }
 
         //Initializing NavigationView
-        final NavigationView navigationView = findViewById(R.id.navigation);
+        NavigationView navigationView = findViewById(R.id.navigation);
+        final int MENU_HEAD = Menu.FIRST;
+
+        //add items to the menu
+        Menu navMenu = navigationView.getMenu();
+        for(int i = 0; i < categories.length; i++)
+        {
+            navMenu.add(0,MENU_HEAD, 0, categories[i]);
+        }
+
 
 
         //Setting Navigation View Item Selected Listener to handle the item click of the navigation menu
@@ -144,33 +160,30 @@ public class MainActivity extends AppCompatActivity
                 }
 
                 //Here we reset the loader to fetech data based on which item was clicked
-                switch (menuItem.getItemId()){
+                currentArticleUrl = EVERYTHING_REQUEST_URL;
+                currrenSourcesUrl = SOURCE_REQUEST_URL + "?category=" + menuItem.getTitle();
 
-                    case R.id.Politics:
+                 /**   case R.id.Politics:
                         currentArticleUrl = EVERYTHING_REQUEST_URL;
                         currrenSourcesUrl = SOURCE_REQUEST_URL + "?category=politics";
                         break;
 
                     case R.id.Tech:
                         currentArticleUrl = EVERYTHING_REQUEST_URL;
-                        currrenSourcesUrl = SOURCE_REQUEST_URL + "?category=technology";
+                        currrenSourcesUrl = SOURCE_REQUEST_URL + "?category=technology&language=en";
                         break;
 
                     case R.id.Business:
                         currentArticleUrl = EVERYTHING_REQUEST_URL;
-                        currrenSourcesUrl = SOURCE_REQUEST_URL + "?category=business";
+                        currrenSourcesUrl = SOURCE_REQUEST_URL + "?category=business&language=en";
                         break;
 
                     case R.id.Entertainment:
                         currentArticleUrl = EVERYTHING_REQUEST_URL;
-                        currrenSourcesUrl = SOURCE_REQUEST_URL + "?category=entertainment";
-                        break;
+                        currrenSourcesUrl = SOURCE_REQUEST_URL + "?category=entertainment&language=en";
+                        break; **/
 
-                    default:
-                        currentArticleUrl = ARTICLE_REQUEST_ROOT_URL;
-                        currrenSourcesUrl = SOURCE_REQUEST_URL;
-                        break;
-                }
+
                 mAdapter.clear();
                 LoaderManager loaderManager = getLoaderManager();
                 loaderManager.restartLoader(ARTICLE_LOADER_ID, null, MainActivity.this);
@@ -219,12 +232,35 @@ public class MainActivity extends AppCompatActivity
         mAdapter.clear();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    //@Override
+    //public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.my_navigation_items, menu);
-        return true;
-    }
+        //List<Source> sources = QueryUtils.fetchSourceData(SOURCE_REQUEST_URL);
+    //    String[] categories ={"business","entertainment","gaming","general","health-and-medical",
+    //                    "music","politics","science-and-nature","sport","technology"};
+
+     //   for (String category: categories)
+     //   {
+
+    //    }
+
+
+    //    getMenuInflater().inflate(R.menu.my_navigation_items, menu);
+    //    menu.add(2131230836,menu.NONE,0,"hello");
+        //NavigationView nav = findViewById(R.id.navigation);
+        //nav.inflateMenu(R.id.Nav_menu);
+    //    return super.onPrepareOptionsMenu(menu);
+    //}
+
+    //@Override
+    //public boolean onPrepareOptionsMenu(Menu menu){
+        //code here
+
+    //    menu.add("hello");
+    //    getMenuInflater().inflate(R.menu.my_navigation_items, menu);
+    //    return super.onPrepareOptionsMenu(menu);
+
+    //}
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
