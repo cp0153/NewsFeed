@@ -6,12 +6,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
 
 import me.cpearce.newsfeed.model.Article;
-
+import me.cpearce.newsfeed.ImageLoadTask;
 /**
  * An {@link ArticleAdapter} knows how to create a list item layout for each article
  * in the data source (a list of {@link Article} objects).
@@ -54,6 +55,10 @@ public class ArticleAdapter extends ArrayAdapter<Article> {
         // Find the article at the given position in the list of articles
         Article currentArticle = getItem(position);
 
+        // Handle the article image
+        String articleUrl = currentArticle.urlToImage;
+        ImageView articleImgView = (ImageView) listItemView.findViewById(R.id.articleView);
+        new ImageLoadTask(articleUrl, articleImgView).execute();
         String title = currentArticle.title;
 
         // Find the TextView with view ID location

@@ -98,6 +98,23 @@ public class QueryUtils {
         return extractArticles(jsonResponse);
     }
 
+    public static List<Article> fetchArticleData(String requestUrl, String categories) {
+        URL url = createUrl(requestUrl + "&category=" + categories + "&apiKey=" +
+                NEWS_API_KEY);
+
+        String jsonResponse = null;
+        try {
+            jsonResponse = makeGetHttpRequest(url);
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "Problem making the GET HTTP request.", e);
+        }
+
+        // Extract relevant fields from the JSON response and create a list of {@link Articles}s
+
+        // Return the list of {@link Articles}s
+        return extractArticles(jsonResponse);
+    }
+
     public static List<Article> fetchEverythingData(String requestUrl, String searchQuery) {
         URL url = createUrl(requestUrl + "q=" + searchQuery + "&apiKey=" +
                 NEWS_API_KEY);
