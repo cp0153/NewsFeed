@@ -17,6 +17,12 @@
     <string name="Test_Title">Test</string>
     <string name="news_sections">News Sections</string>
 
+    <!-- Content Descriptions -->
+    <string name="content_desc_article_image">Image from articles image url</string>
+
+    <!-- Source for articleImage -->
+    <string name="article_image_source">Source: </string>
+    <string name="article_image_source_url_placeholder">Url Placeholder</string>
 
     <!-- login and register -->
     <string name="login_btn_txt">LOGIN</string>
