@@ -5,3 +5,7 @@
 **Robert Farinelli 01402045**
 * Refactored Menu events to work with with the new api
 * changed Navigation view menu to dynamic based on the News categories based on the API
+
+**Jacob Rothmel 01322102**
+* Added abilitiy to download image bitmaps asynchronously for each article
+* More back end work on firebase set up and started setting up for history views and user accounts
