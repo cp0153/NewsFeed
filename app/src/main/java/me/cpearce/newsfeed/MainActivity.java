@@ -144,7 +144,6 @@ public class MainActivity extends AppCompatActivity
         }
 
 
-
         //Setting Navigation View Item Selected Listener to handle the item click of the navigation menu
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -159,28 +158,28 @@ public class MainActivity extends AppCompatActivity
                     menuItem.setChecked(true);
                 }
 
-                //Here we reset the loader to fetech data based on which item was clicked
+                //Here we reset the loader to fetch data based on which item was clicked
                 currentArticleUrl = EVERYTHING_REQUEST_URL;
                 currrenSourcesUrl = SOURCE_REQUEST_URL + "?category=" + menuItem.getTitle();
 
                  /**   case R.id.Politics:
                         currentArticleUrl = EVERYTHING_REQUEST_URL;
-                        currrenSourcesUrl = SOURCE_REQUEST_URL + "?category=politics";
+                        currentSourcesUrl = SOURCE_REQUEST_URL + "?category=politics";
                         break;
 
                     case R.id.Tech:
                         currentArticleUrl = EVERYTHING_REQUEST_URL;
-                        currrenSourcesUrl = SOURCE_REQUEST_URL + "?category=technology&language=en";
+                        currentSourcesUrl = SOURCE_REQUEST_URL + "?category=technology&language=en";
                         break;
 
                     case R.id.Business:
                         currentArticleUrl = EVERYTHING_REQUEST_URL;
-                        currrenSourcesUrl = SOURCE_REQUEST_URL + "?category=business&language=en";
+                        currentSourcesUrl = SOURCE_REQUEST_URL + "?category=business&language=en";
                         break;
 
                     case R.id.Entertainment:
                         currentArticleUrl = EVERYTHING_REQUEST_URL;
-                        currrenSourcesUrl = SOURCE_REQUEST_URL + "?category=entertainment&language=en";
+                        currentSourcesUrl = SOURCE_REQUEST_URL + "?category=entertainment&language=en";
                         break; **/
 
 
@@ -195,7 +194,6 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
-    // TODO: refactor to use 3 loaders
     @Override
     public Loader<List<Article>> onCreateLoader(int i, Bundle bundle) {
         // Create a new loader for the given URL
