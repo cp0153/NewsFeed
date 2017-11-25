@@ -161,7 +161,7 @@ public class MainActivity extends AppCompatActivity
 
                 //Here we reset the loader to fetech data based on which item was clicked
                 currentArticleUrl = EVERYTHING_REQUEST_URL;
-                currrenSourcesUrl = SOURCE_REQUEST_URL + "?category=" + menuItem.getTitle();
+                currrenSourcesUrl = SOURCE_REQUEST_URL + "&category=" + menuItem.getTitle();
 
                  /**   case R.id.Politics:
                         currentArticleUrl = EVERYTHING_REQUEST_URL;

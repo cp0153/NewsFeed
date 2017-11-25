@@ -61,7 +61,7 @@ public class QueryUtils {
 
 
     public static List<Article> fetchArticleData(String requestUrl, List<Source> sources) {
-         requestUrl = requestUrl + "?sources=" +
+         requestUrl = requestUrl + "&sources=" +
                 getCommaSeparatedSourceList(sources) +
                 "&apiKey=" +
                 NEWS_API_KEY;
