@@ -5,4 +5,4 @@
 
 
 **Jacob Rothmel 01322102**
-
+* more work with user identification in firebase *
