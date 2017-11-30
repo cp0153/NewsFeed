@@ -7,34 +7,37 @@ import android.content.Loader;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.ArraySet;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
-
-
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
+import java.util.ListIterator;
+
 
 import me.cpearce.newsfeed.model.Article;
 import me.cpearce.newsfeed.model.Source;
 
 public class MainActivity extends AppCompatActivity
-        implements LoaderManager.LoaderCallbacks<List<Article>> {
+        implements LoaderManager.LoaderCallbacks {
 
     private static final String LOG_TAG = MainActivity.class.getName();
 
     private ArticleAdapter mAdapter;
 
-    /**
+    //private CategoryAdapter cAdapter;
+
+    /*
      * URL for the https://newsapi.org
      */
     private static final String ARTICLE_REQUEST_ROOT_URL = "https://newsapi.org//v2/top-headlines?language=en"; // ?source=google-news&sortBy=top&apiKey=23b2fa848a2a45aa85546b463a7afc0a";
@@ -56,9 +59,10 @@ public class MainActivity extends AppCompatActivity
 
     private static final int ARTICLE_LOADER_ID = 1;
     private static final int SOURCE_LOADER_ID = 2;
-//    private static final int ENTITY_LOADER_ID = 2;
+    private static final int CATEGORY_LOADER_ID = 3;
 
 
+    //private ArrayList<String> categories;
     /**
      * TextView that is displayed when the list is empty
      */
@@ -75,6 +79,7 @@ public class MainActivity extends AppCompatActivity
 
         // Find a reference to the {@link ListView} in the layout
         ListView articleListView = (ListView) findViewById(R.id.list);
+
 
         mEmptyStateTextView = (TextView) findViewById(R.id.empty_view);
         articleListView.setEmptyView(mEmptyStateTextView);
@@ -122,6 +127,8 @@ public class MainActivity extends AppCompatActivity
             // because this activity implements the LoaderCallbacks interface).
             loaderManager.initLoader(ARTICLE_LOADER_ID, null, this);
             loaderManager.initLoader(SOURCE_LOADER_ID, null, this);
+            //loaderManager.initLoader(CATEGORY_LOADER_ID,null,this);
+
         } else {
             // Otherwise, display error
             // First, hide loading indicator so error message will be visible
@@ -136,12 +143,20 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = findViewById(R.id.navigation);
         final int MENU_HEAD = Menu.FIRST;
 
+
         //add items to the menu
         Menu navMenu = navigationView.getMenu();
-        for(int i = 0; i < categories.length; i++)
-        {
-            navMenu.add(0,MENU_HEAD, 0, categories[i]);
-        }
+        //cAdapter = new CategoryAdapter(this,new ArrayList<String>());
+
+       for(int i = 0; i < categories.length; i++)
+       {
+           navMenu.add(0,MENU_HEAD, 0, categories[i]);
+       }
+
+        //for(int i = 0; i < categories.size(); i++)
+        //{
+        //    navMenu.add(0,MENU_HEAD,0, cAdapter.getItem(i));
+        //}
 
 
         //Setting Navigation View Item Selected Listener to handle the item click of the navigation menu
@@ -162,26 +177,6 @@ public class MainActivity extends AppCompatActivity
                 currentArticleUrl = EVERYTHING_REQUEST_URL;
                 currrenSourcesUrl = SOURCE_REQUEST_URL + "&category=" + menuItem.getTitle();
 
-                 /**   case R.id.Politics:
-                        currentArticleUrl = EVERYTHING_REQUEST_URL;
-                        currentSourcesUrl = SOURCE_REQUEST_URL + "?category=politics";
-                        break;
-
-                    case R.id.Tech:
-                        currentArticleUrl = EVERYTHING_REQUEST_URL;
-                        currentSourcesUrl = SOURCE_REQUEST_URL + "?category=technology&language=en";
-                        break;
-
-                    case R.id.Business:
-                        currentArticleUrl = EVERYTHING_REQUEST_URL;
-                        currentSourcesUrl = SOURCE_REQUEST_URL + "?category=business&language=en";
-                        break;
-
-                    case R.id.Entertainment:
-                        currentArticleUrl = EVERYTHING_REQUEST_URL;
-                        currentSourcesUrl = SOURCE_REQUEST_URL + "?category=entertainment&language=en";
-                        break; **/
-
 
                 mAdapter.clear();
                 LoaderManager loaderManager = getLoaderManager();
@@ -195,9 +190,19 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public Loader<List<Article>> onCreateLoader(int i, Bundle bundle) {
-        // Create a new loader for the given URL
-        return new ArticleLoader(this, currentArticleUrl, NAT_LANGUAGE_REQUEST_ROOT_URL, currrenSourcesUrl);
+    public Loader onCreateLoader(int id, Bundle bundle) {
+
+        //switch (id) {
+        //    case ARTICLE_LOADER_ID:
+                return new ArticleLoader(this, currentArticleUrl, NAT_LANGUAGE_REQUEST_ROOT_URL, currrenSourcesUrl);
+
+
+        //    case CATEGORY_LOADER_ID:
+         //       return new CategoryLoader(this,SOURCE_REQUEST_URL);
+
+       //     default:
+       //         return null;
+       // }
     }
 
     //    @Override
@@ -206,59 +211,33 @@ public class MainActivity extends AppCompatActivity
 //    }
 
     @Override
-    public void onLoadFinished(Loader<List<Article>> loader, List<Article> articles) {
-        // Hide loading indicator because the data has been loaded
+    public void onLoadFinished(Loader loader, Object articles) {
+        int loaderId = loader.getId();
         View loadingIndicator = findViewById(R.id.loading_indicator);
-        loadingIndicator.setVisibility(View.GONE);
 
-        // Set empty state text to display "No articles found."
-        mEmptyStateTextView.setText(R.string.no_articles);
+        if(loaderId == ARTICLE_LOADER_ID) {
+            // Hide loading indicator because the data has been loaded
+            loadingIndicator.setVisibility(View.GONE);
 
-        // Clear the adapter of previous article data
-        mAdapter.clear();
+            // Set empty state text to display "No articles found."
+            mEmptyStateTextView.setText(R.string.no_articles);
 
-        // If there is a valid list of {@link article}s, then add them to the adapter's
-        // data set. This will trigger the ListView to update.
-        if (articles != null && !articles.isEmpty()) {
-            mAdapter.addAll(articles);
+            // Clear the adapter of previous article data
+            mAdapter.clear();
+
+            // If there is a valid list of {@link article}s, then add them to the adapter's
+            // data set. This will trigger the ListView to update.
+            if ((List<Article>)articles != null && !((List<Article>)articles).isEmpty()) {
+                mAdapter.addAll((List<Article>)articles);
+            }
         }
     }
 
     @Override
-    public void onLoaderReset(Loader<List<Article>> loader) {
+    public void onLoaderReset(Loader loader) {
         // Loader reset, so we can clear out our existing data.
         mAdapter.clear();
     }
-
-    //@Override
-    //public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        //List<Source> sources = QueryUtils.fetchSourceData(SOURCE_REQUEST_URL);
-    //    String[] categories ={"business","entertainment","gaming","general","health-and-medical",
-    //                    "music","politics","science-and-nature","sport","technology"};
-
-     //   for (String category: categories)
-     //   {
-
-    //    }
-
-
-    //    getMenuInflater().inflate(R.menu.my_navigation_items, menu);
-    //    menu.add(2131230836,menu.NONE,0,"hello");
-        //NavigationView nav = findViewById(R.id.navigation);
-        //nav.inflateMenu(R.id.Nav_menu);
-    //    return super.onPrepareOptionsMenu(menu);
-    //}
-
-    //@Override
-    //public boolean onPrepareOptionsMenu(Menu menu){
-        //code here
-
-    //    menu.add("hello");
-    //    getMenuInflater().inflate(R.menu.my_navigation_items, menu);
-    //    return super.onPrepareOptionsMenu(menu);
-
-    //}
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
