@@ -408,6 +408,7 @@ public class QueryUtils {
      * parsing a JSON response.
      */
     public static List<Article> extractArticles(String articleJSON) {
+        final String NAT_LANGUAGE_REQUEST_ROOT_URL = "https://language.googleapis.com/v1beta2/documents:analyzeEntities";
         // If the JSON string is empty or null, then return early.
         if (TextUtils.isEmpty(articleJSON)) {
             return null;
@@ -420,7 +421,7 @@ public class QueryUtils {
         try {
             // Create a JSONObject from the SAMPLE_NEWS_JSON_RESPONSE string
             JSONObject baseJsonResponse = new JSONObject(articleJSON);
-            String entities = "";
+            // String entities = "";
             //JSONObject MLJsonResponse = new JSONObject(entityJSON);
 
             // Extract the JSONArray associated with the key called "articles",
@@ -454,9 +455,11 @@ public class QueryUtils {
                 String sourceName = currentSource.getString("name");
 
 
-                Article article = new Article(sourceId, sourceName, author, title, description, url, urlToImage, publishedAt);
+                List<Entity> entitiesList = new ArrayList<>();
+                entitiesList.addAll(QueryUtils.fetchEntityData(NAT_LANGUAGE_REQUEST_ROOT_URL, description));
+                Article article = new Article(sourceId, sourceName, author, title, description, url, urlToImage, publishedAt, entitiesList);
                 articles.add(article);
-                myRef.push().setValue(article);
+//                myRef.push().setValue(article);
             }
 
         } catch (JSONException e) {

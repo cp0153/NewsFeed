@@ -1,5 +1,7 @@
 package me.cpearce.newsfeed.model;
 
+import java.util.List;
+
 /**
  * Created by Christopher on 10/19/2017.
  * model for Articles
@@ -14,11 +16,11 @@ public class Article {
     public final String url;
     public final String urlToImage;
     public final String publishedAt;
+    public final List<Entity> entitiesList;
 
     /**
      * Constructs a new {@link Article} object.
-     *
-     * @param sourceId   article source The identifier id
+     *  @param sourceId   article source The identifier id
      * @param sourceName article source name
      * @param author      article author
      * @param title       article title
@@ -26,9 +28,10 @@ public class Article {
      * @param url         is the article url
      * @param urlToImage  is the image url
      * @param publishedAt is the date and time the article was published
+     * @param entitiesList list of article entities
      */
     public Article(String sourceId, String sourceName, String author, String title, String description, String url, String urlToImage,
-                   String publishedAt) {
+                   String publishedAt, List<Entity> entitiesList) {
         this.sourceId = sourceId;
         this.sourceName = sourceName;
         this.author = author;
@@ -37,5 +40,6 @@ public class Article {
         this.url = url;
         this.urlToImage = urlToImage;
         this.publishedAt = publishedAt;
+        this.entitiesList = entitiesList;
     }
 }

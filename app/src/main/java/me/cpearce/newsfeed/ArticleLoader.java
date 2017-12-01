@@ -75,16 +75,6 @@ public class ArticleLoader extends AsyncTaskLoader<List<Article>> {
 
         articles.addAll(QueryUtils.fetchArticleData(mNewsUrl,((sources.size() < 5) ? sources : sources.subList(0,4))));
 
-
-        // Perform the network request, parse the response, and extract a list of articles.
-
-        // query entities here, currently not doing anything with entities
-        // TODO: setup frontend display with entities and articles
-//        List<Entity> entities = new ArrayList<>();
-//        for (int i = 0; i < articles.size(); i++) {
-//            Article article = articles.get(i);
-//            entities.addAll(QueryUtils.fetchEntityData(mMLUrl, article.description));
-//        }
         return articles;
     }
 }

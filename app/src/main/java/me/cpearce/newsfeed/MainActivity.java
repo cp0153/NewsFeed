@@ -7,8 +7,6 @@ import android.content.Loader;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.AsyncTask;
-import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,14 +17,10 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 
 
 import me.cpearce.newsfeed.model.Article;
-import me.cpearce.newsfeed.model.Source;
 
 public class MainActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks {
@@ -50,7 +44,7 @@ public class MainActivity extends AppCompatActivity
 
     private static String currentArticleUrl = ARTICLE_REQUEST_ROOT_URL;
 
-    private static String currrenSourcesUrl = SOURCE_REQUEST_URL;
+    private static String currentSourcesUrl = SOURCE_REQUEST_URL;
 
     /**
      * Constant value for the article loader ID. We can choose any integer.
@@ -175,7 +169,7 @@ public class MainActivity extends AppCompatActivity
 
                 //Here we reset the loader to fetch data based on which item was clicked
                 currentArticleUrl = EVERYTHING_REQUEST_URL;
-                currrenSourcesUrl = SOURCE_REQUEST_URL + "&category=" + menuItem.getTitle();
+                currentSourcesUrl = SOURCE_REQUEST_URL + "&category=" + menuItem.getTitle();
 
 
                 mAdapter.clear();
@@ -194,7 +188,7 @@ public class MainActivity extends AppCompatActivity
 
         //switch (id) {
         //    case ARTICLE_LOADER_ID:
-                return new ArticleLoader(this, currentArticleUrl, NAT_LANGUAGE_REQUEST_ROOT_URL, currrenSourcesUrl);
+                return new ArticleLoader(this, currentArticleUrl, NAT_LANGUAGE_REQUEST_ROOT_URL, currentSourcesUrl);
 
 
         //    case CATEGORY_LOADER_ID:

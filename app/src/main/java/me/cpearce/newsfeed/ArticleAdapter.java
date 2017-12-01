@@ -1,6 +1,10 @@
 package me.cpearce.newsfeed;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,14 +13,18 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import me.cpearce.newsfeed.model.Article;
 import me.cpearce.newsfeed.ImageLoadTask;
+import me.cpearce.newsfeed.model.Entity;
+
 /**
  * An {@link ArticleAdapter} knows how to create a list item layout for each article
  * in the data source (a list of {@link Article} objects).
- *
+ * <p>
  * These list item layouts will be provided to an adapter view like ListView
  * to be displayed to the user.
  */
@@ -31,7 +39,7 @@ public class ArticleAdapter extends ArrayAdapter<Article> {
     /**
      * Constructs a new {@link ArticleAdapter}.
      *
-     * @param context of the app
+     * @param context  of the app
      * @param articles is the list of articles, which is the data source of the adapter
      */
     public ArticleAdapter(Context context, List<Article> articles) {
@@ -72,7 +80,7 @@ public class ArticleAdapter extends ArrayAdapter<Article> {
             authorView.setText(author);
         }
 
-       // Find the TextView with view ID description
+        // Find the TextView with view ID description
         String description = currentArticle.description;
         TextView descriptionView = (TextView) listItemView.findViewById(R.id.description);
         // Display the description of the current article in that TextView
@@ -82,27 +90,24 @@ public class ArticleAdapter extends ArrayAdapter<Article> {
 //        TextView entitiesView = (TextView) listItemView.findViewById(R.id.entities);
 //        entitiesView.setText(entities);
 
-        // Create a new Date object from the time in milliseconds of the article
-        String date = currentArticle.publishedAt;
-        if (date.length() > 4) {
-            // Find the TextView with view ID date
-            TextView dateView = (TextView) listItemView.findViewById(R.id.date);
-            // Format the date string (i.e. "Mar 3, 1984")
-            String formattedDate = date.substring(0, 9);
-            // Display the date of the current article in that TextView
-            dateView.setText(formattedDate);
 
-            // Find the TextView with view ID time
-            TextView timeView = (TextView) listItemView.findViewById(R.id.time);
-            // Format the time string (i.e. "4:30PM")
-            String formattedTime = date.substring(11, date.length() - 1);
-            // Display the time of the current article in that TextView
-            timeView.setText(formattedTime);
+        List<Entity> entities = currentArticle.entitiesList;
+
+        // get list of names with a url value
+        //List<Map<String, String>> entityUrlNames = new ArrayList<>();
+        //StringBuilder tempEntity = new StringBuilder();
+        for (int i = 0; i < entities.size(); i++) {
+            if (!entities.get(i).metadata.isEmpty()) {
+               //entityUrlNames.add(entities.get(i).getWikiUrl());
+                TextView entityView =(TextView) listItemView.findViewById(R.id.entities);
+                entityView.setClickable(true);
+                entityView.setMovementMethod(LinkMovementMethod.getInstance());
+                String text = "<a href='" + entities.get(i).metadata.get("wikipedia_url") + "'> " + entities.get(i).name;
+                entityView.setText(Html.fromHtml(text));
+                break;
+            }
         }
 
-
-
-        // Return the list item view that is now showing the appropriate data
         return listItemView;
     }
 }
