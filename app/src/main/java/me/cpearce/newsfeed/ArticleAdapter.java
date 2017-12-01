@@ -95,18 +95,20 @@ public class ArticleAdapter extends ArrayAdapter<Article> {
 
         // get list of names with a url value
         //List<Map<String, String>> entityUrlNames = new ArrayList<>();
-        //StringBuilder tempEntity = new StringBuilder();
+        StringBuilder tempText = new StringBuilder();
+        TextView entityView =(TextView) listItemView.findViewById(R.id.entities);
         for (int i = 0; i < entities.size(); i++) {
             if (!entities.get(i).metadata.isEmpty()) {
                //entityUrlNames.add(entities.get(i).getWikiUrl());
-                TextView entityView =(TextView) listItemView.findViewById(R.id.entities);
                 entityView.setClickable(true);
                 entityView.setMovementMethod(LinkMovementMethod.getInstance());
-                String text = "<a href='" + entities.get(i).metadata.get("wikipedia_url") + "'> " + entities.get(i).name;
-                entityView.setText(Html.fromHtml(text));
-                break;
+                tempText.append("<a href='").append(entities.get(i).metadata.get("wikipedia_url")).append("'> ").append(entities.get(i).name);
+                if ( i < entities.size() -1) {
+                    tempText.append(", ");
+                }
             }
         }
+        entityView.setText(Html.fromHtml(tempText.toString()));
 
         return listItemView;
     }
