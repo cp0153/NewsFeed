@@ -8,13 +8,16 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.support.design.widget.NavigationView;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,11 +32,6 @@ public class MainActivity extends AppCompatActivity
 
     private ArticleAdapter mAdapter;
 
-    //private CategoryAdapter cAdapter;
-
-    /*
-     * URL for the https://newsapi.org
-     */
     private static final String ARTICLE_REQUEST_ROOT_URL = "https://newsapi.org//v2/top-headlines?language=en"; // ?source=google-news&sortBy=top&apiKey=23b2fa848a2a45aa85546b463a7afc0a";
 
     private static final String NAT_LANGUAGE_REQUEST_ROOT_URL = "https://language.googleapis.com/v1beta2/documents:analyzeEntities"; // ?key=AIzaSyAh9uz0qNveHuiNYNBhjanf5gq86Su5rlo";
@@ -42,6 +40,7 @@ public class MainActivity extends AppCompatActivity
 
     private static final String EVERYTHING_REQUEST_URL = "https://newsapi.org//v2/everything?language=en";
 
+    // these two variables are used to reset the loader
     private static String currentArticleUrl = ARTICLE_REQUEST_ROOT_URL;
 
     private static String currentSourcesUrl = SOURCE_REQUEST_URL;
@@ -55,12 +54,13 @@ public class MainActivity extends AppCompatActivity
     private static final int SOURCE_LOADER_ID = 2;
     private static final int CATEGORY_LOADER_ID = 3;
 
-
-    //private ArrayList<String> categories;
     /**
      * TextView that is displayed when the list is empty
      */
     private TextView mEmptyStateTextView;
+    private DrawerLayout mDrawerLayout;
+    private SearchView mSearchView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +73,6 @@ public class MainActivity extends AppCompatActivity
 
         // Find a reference to the {@link ListView} in the layout
         ListView articleListView = (ListView) findViewById(R.id.list);
-
 
         mEmptyStateTextView = (TextView) findViewById(R.id.empty_view);
         articleListView.setEmptyView(mEmptyStateTextView);
@@ -134,12 +133,11 @@ public class MainActivity extends AppCompatActivity
         }
 
         //Initializing NavigationView
-        NavigationView navigationView = findViewById(R.id.navigation);
+        final NavigationView navigationView = findViewById(R.id.navigation);
         final int MENU_HEAD = Menu.FIRST;
 
-
         //add items to the menu
-        Menu navMenu = navigationView.getMenu();
+        final Menu navMenu = navigationView.getMenu();
         //cAdapter = new CategoryAdapter(this,new ArrayList<String>());
 
        for(int i = 0; i < categories.length; i++)
@@ -147,37 +145,25 @@ public class MainActivity extends AppCompatActivity
            navMenu.add(0,MENU_HEAD, 0, categories[i]);
        }
 
-        //for(int i = 0; i < categories.size(); i++)
-        //{
-        //    navMenu.add(0,MENU_HEAD,0, cAdapter.getItem(i));
-        //}
-
-
         //Setting Navigation View Item Selected Listener to handle the item click of the navigation menu
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
-                //Checking if the item is in checked state or not, if not make it in checked state
-                if(menuItem.isChecked())
-                {
-                    menuItem.setChecked(false);
-                }
-                else
-                {
-                    menuItem.setChecked(true);
-                }
+
+                mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+                mDrawerLayout.closeDrawers();
 
                 //Here we reset the loader to fetch data based on which item was clicked
                 currentArticleUrl = EVERYTHING_REQUEST_URL;
                 currentSourcesUrl = SOURCE_REQUEST_URL + "&category=" + menuItem.getTitle();
 
-
                 mAdapter.clear();
+
+                View loadingIndicator = findViewById(R.id.loading_indicator);
+                loadingIndicator.setVisibility(View.VISIBLE);
                 LoaderManager loaderManager = getLoaderManager();
                 loaderManager.restartLoader(ARTICLE_LOADER_ID, null, MainActivity.this);
                 loaderManager.restartLoader(SOURCE_LOADER_ID, null,MainActivity.this);
-
-
                 return true;
             }
         });
@@ -186,23 +172,13 @@ public class MainActivity extends AppCompatActivity
     @Override
     public Loader onCreateLoader(int id, Bundle bundle) {
 
-        //switch (id) {
-        //    case ARTICLE_LOADER_ID:
-                return new ArticleLoader(this, currentArticleUrl, NAT_LANGUAGE_REQUEST_ROOT_URL, currentSourcesUrl);
-
-
-        //    case CATEGORY_LOADER_ID:
-         //       return new CategoryLoader(this,SOURCE_REQUEST_URL);
-
-       //     default:
-       //         return null;
-       // }
+                return new ArticleLoader(this, currentArticleUrl, currentSourcesUrl);
     }
 
-    //    @Override
-//    public Loader<List<Source>> onCreateLoader(int i, Bundle bundle) {
-//        return new SourceLoader(this, SOURCE_REQUEST_URL);
-//    }
+    public void setOnSearchClickListener (View.OnClickListener listener) {
+
+    }
+
 
     @Override
     public void onLoadFinished(Loader loader, Object articles) {
@@ -257,4 +233,5 @@ public class MainActivity extends AppCompatActivity
         Intent i = new Intent(MainActivity.this, LoginActivity.class);
         startActivity(i);
     }
+
 }

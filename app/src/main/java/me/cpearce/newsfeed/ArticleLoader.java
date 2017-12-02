@@ -17,15 +17,9 @@ import me.cpearce.newsfeed.model.Source;
  */
 public class ArticleLoader extends AsyncTaskLoader<List<Article>> {
 
-    /** Tag for log messages */
-    private static final String LOG_TAG = ArticleLoader.class.getName();
-
-    private static final int ARTICLES_MAX_SIZE = 20;
-
     /** Query URL */
     private String mNewsUrl;
     /** Query URL */
-    private String mMLUrl;
     private String mSourceUrl;
 
     /**
@@ -33,12 +27,10 @@ public class ArticleLoader extends AsyncTaskLoader<List<Article>> {
      *
      * @param context of the activity
      * @param newsUrl to load data from news
-     * @param mlUrl to load data from google
      */
-    public ArticleLoader(Context context, String newsUrl, String mlUrl, String sourceUrl) {
+    public ArticleLoader(Context context, String newsUrl, String sourceUrl) {
         super(context);
         mNewsUrl = newsUrl;
-        mMLUrl = mlUrl;
         mSourceUrl = sourceUrl;
 
     }
@@ -59,21 +51,9 @@ public class ArticleLoader extends AsyncTaskLoader<List<Article>> {
 
         List<Source> sources = QueryUtils.fetchSourceData(mSourceUrl);
 
-
-        // max possible sources that can be queried at once are 5
-        // commenting this out because it returns several thousand articles all at once
-//        List<List<Source>> partitions = new ArrayList<>();
-//
-//        for (int i = 0; i < sources.size(); i+= 5){
-//            partitions.add(sources.subList(i, Math.min(i + 5, sources.size())));
-//        }
-//        List<Article> articles = new ArrayList<>();
-//        for (List<Source> list : partitions) {
-//            articles.addAll(QueryUtils.fetchArticleData(mNewsUrl, list));
-//        }
         List<Article> articles = new ArrayList<>();
 
-        articles.addAll(QueryUtils.fetchArticleData(mNewsUrl,((sources.size() < 5) ? sources : sources.subList(0,4))));
+        articles.addAll(QueryUtils.fetchArticleData(mNewsUrl,((sources.size() < 5) ? sources : sources.subList(0,2))));
 
         return articles;
     }

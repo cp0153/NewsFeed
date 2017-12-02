@@ -99,17 +99,18 @@ public class ArticleAdapter extends ArrayAdapter<Article> {
         TextView entityView =(TextView) listItemView.findViewById(R.id.entities);
         for (int i = 0; i < entities.size(); i++) {
             if (!entities.get(i).metadata.isEmpty()) {
-               //entityUrlNames.add(entities.get(i).getWikiUrl());
                 entityView.setClickable(true);
                 entityView.setMovementMethod(LinkMovementMethod.getInstance());
                 tempText.append("<a href='").append(entities.get(i).metadata.get("wikipedia_url")).append("'> ").append(entities.get(i).name);
-                if ( i < entities.size() -1) {
+                if (entities.size() == 1) {
+                    break;
+                }
+                if (i < entities.size() -1){
                     tempText.append(", ");
                 }
             }
         }
         entityView.setText(Html.fromHtml(tempText.toString()));
-
         return listItemView;
     }
 }

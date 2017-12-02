@@ -25,6 +25,4 @@ public class CategoryAdapter extends  ArrayAdapter<String>{
     public CategoryAdapter(Context context, List<String> categories) {
         super(context, 0, categories);
     }
-
-
 }

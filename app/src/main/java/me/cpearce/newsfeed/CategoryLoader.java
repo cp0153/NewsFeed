@@ -53,6 +53,4 @@ public class CategoryLoader extends AsyncTaskLoader<List<String>>{
 
         return categories;
     }
-
-
 }

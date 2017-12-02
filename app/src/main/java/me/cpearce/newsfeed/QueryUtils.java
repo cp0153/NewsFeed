@@ -421,22 +421,8 @@ public class QueryUtils {
         try {
             // Create a JSONObject from the SAMPLE_NEWS_JSON_RESPONSE string
             JSONObject baseJsonResponse = new JSONObject(articleJSON);
-            // String entities = "";
-            //JSONObject MLJsonResponse = new JSONObject(entityJSON);
 
-            // Extract the JSONArray associated with the key called "articles",
-            // which represents a list of news articles.
             JSONArray articleArray = baseJsonResponse.getJSONArray("articles");
-            //JSONArray entityArray = MLJsonResponse.getJSONArray("entities");
-//            StringBuilder entities = new StringBuilder();
-//            for (int i = 0; i < entityArray.length(); i++) {
-//                JSONObject currentEntity = entityArray.getJSONObject(i);
-//                String entity_name = currentEntity.getString("name");
-//                entities.append(entity_name);
-//                entities.append(", ");
-//            }
-//            entities.substring(0, entities.length() -2);
-//            String built_entities = entities.toString();
 
             FirebaseDatabase database = FirebaseDatabase.getInstance();
             DatabaseReference myRef = database.getReference("articles");
