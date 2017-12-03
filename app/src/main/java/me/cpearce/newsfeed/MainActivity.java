@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity
 
 
         String[] categories ={"business","entertainment","gaming","general","health-and-medical",
-                "music","politics","science-and-nature","sport","technology"};
+                "music","politics","science-and-nature","sport","technology","History"};
 
         // Find a reference to the {@link ListView} in the layout
         ListView articleListView = (ListView) findViewById(R.id.list);
@@ -153,17 +153,27 @@ public class MainActivity extends AppCompatActivity
                 mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
                 mDrawerLayout.closeDrawers();
 
-                //Here we reset the loader to fetch data based on which item was clicked
-                currentArticleUrl = EVERYTHING_REQUEST_URL;
-                currentSourcesUrl = SOURCE_REQUEST_URL + "&category=" + menuItem.getTitle();
+                //Get articles user viewed perviously from FireBase
+                if(menuItem.getTitle().equals("History"))
+                {
+                    //History logic here
+                }
 
-                mAdapter.clear();
+                //Send Request to api based on item selected
+                else {
+                    //Here we reset the loader to fetch data based on which item was clicked
+                    currentArticleUrl = EVERYTHING_REQUEST_URL;
+                    currentSourcesUrl = SOURCE_REQUEST_URL + "&category=" + menuItem.getTitle();
 
-                View loadingIndicator = findViewById(R.id.loading_indicator);
-                loadingIndicator.setVisibility(View.VISIBLE);
-                LoaderManager loaderManager = getLoaderManager();
-                loaderManager.restartLoader(ARTICLE_LOADER_ID, null, MainActivity.this);
-                loaderManager.restartLoader(SOURCE_LOADER_ID, null,MainActivity.this);
+                    mAdapter.clear();
+
+                    View loadingIndicator = findViewById(R.id.loading_indicator);
+                    loadingIndicator.setVisibility(View.VISIBLE);
+                    LoaderManager loaderManager = getLoaderManager();
+                    loaderManager.restartLoader(ARTICLE_LOADER_ID, null, MainActivity.this);
+                    loaderManager.restartLoader(SOURCE_LOADER_ID, null, MainActivity.this);
+                }
+
                 return true;
             }
         });
