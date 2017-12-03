@@ -15,7 +15,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -39,6 +38,8 @@ public class MainActivity extends AppCompatActivity
     private static final String SOURCE_REQUEST_URL = "https://newsapi.org/v2/sources?language=en";
 
     private static final String EVERYTHING_REQUEST_URL = "https://newsapi.org//v2/everything?language=en";
+
+    private static final String HISTORY_REQUEST_URL = "https://newsfeed-38210.firebaseio.com/articles.json?orderBy=%22$key%22&limitToFirst=20";
 
     // these two variables are used to reset the loader
     private static String currentArticleUrl = ARTICLE_REQUEST_ROOT_URL;
@@ -89,8 +90,13 @@ public class MainActivity extends AppCompatActivity
         articleListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+
                 // Find the current article that was clicked on
                 Article currentArticle = mAdapter.getItem(position);
+
+                //add item to FireBase
+                //UserHistoryUpload upload = new UserHistoryUpload();
+                //upload.execute(currentArticle);
 
                 // Convert the String URL into a URI object (to pass into the Intent constructor)
                 Uri articleUri = Uri.parse(currentArticle.url);
@@ -156,7 +162,8 @@ public class MainActivity extends AppCompatActivity
                 //Get articles user viewed perviously from FireBase
                 if(menuItem.getTitle().equals("History"))
                 {
-                    //History logic here
+                    currentArticleUrl = HISTORY_REQUEST_URL;
+
                 }
 
                 //Send Request to api based on item selected
@@ -164,15 +171,16 @@ public class MainActivity extends AppCompatActivity
                     //Here we reset the loader to fetch data based on which item was clicked
                     currentArticleUrl = EVERYTHING_REQUEST_URL;
                     currentSourcesUrl = SOURCE_REQUEST_URL + "&category=" + menuItem.getTitle();
-
-                    mAdapter.clear();
-
-                    View loadingIndicator = findViewById(R.id.loading_indicator);
-                    loadingIndicator.setVisibility(View.VISIBLE);
-                    LoaderManager loaderManager = getLoaderManager();
-                    loaderManager.restartLoader(ARTICLE_LOADER_ID, null, MainActivity.this);
-                    loaderManager.restartLoader(SOURCE_LOADER_ID, null, MainActivity.this);
                 }
+
+                mAdapter.clear();
+
+                View loadingIndicator = findViewById(R.id.loading_indicator);
+                loadingIndicator.setVisibility(View.VISIBLE);
+                LoaderManager loaderManager = getLoaderManager();
+                loaderManager.restartLoader(ARTICLE_LOADER_ID, null, MainActivity.this);
+                loaderManager.restartLoader(SOURCE_LOADER_ID, null, MainActivity.this);
+
 
                 return true;
             }
@@ -182,7 +190,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public Loader onCreateLoader(int id, Bundle bundle) {
 
-                return new ArticleLoader(this, currentArticleUrl, currentSourcesUrl);
+        return new ArticleLoader(this, currentArticleUrl, currentSourcesUrl);
     }
 
     public void setOnSearchClickListener (View.OnClickListener listener) {

@@ -49,6 +49,8 @@ public class ArticleLoader extends AsyncTaskLoader<List<Article>> {
             return null;
         }
 
+
+
         List<Source> sources = QueryUtils.fetchSourceData(mSourceUrl);
 
         List<Article> articles = new ArrayList<>();

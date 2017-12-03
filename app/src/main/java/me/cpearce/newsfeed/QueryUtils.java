@@ -25,6 +25,7 @@ import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Map;
@@ -53,6 +54,7 @@ public class QueryUtils {
      */
     private QueryUtils() {
     }
+
     private static final FirebaseDatabase database = FirebaseDatabase.getInstance();
     // private static final DatabaseReference NEWS_API_KEY = database.getReference("apiKey").child("newsapi");
     // private static final DatabaseReference NAT_API_KEY = database.getReference("apiKey").child("google");
@@ -61,7 +63,8 @@ public class QueryUtils {
 
 
     public static List<Article> fetchArticleData(String requestUrl, List<Source> sources) {
-         requestUrl = requestUrl + "&sources=" +
+        requestUrl = (requestUrl.contains("firebaseio")) ? requestUrl : requestUrl +
+                "&sources=" +
                 getCommaSeparatedSourceList(sources) +
                 "&apiKey=" +
                 NEWS_API_KEY;
@@ -78,7 +81,7 @@ public class QueryUtils {
         // Extract relevant fields from the JSON response and create a list of {@link Articles}s
 
         // Return the list of {@link Articles}s
-        return extractArticles(jsonResponse);
+        return (jsonResponse.contains("articles")) ?extractArticles(jsonResponse) : extractHistory(jsonResponse);
     }
 
     public static List<Article> fetchArticleData(String requestUrl) {
@@ -99,8 +102,8 @@ public class QueryUtils {
     }
 
     public static List<Article> fetchArticleData(String requestUrl, String categories) {
-        URL url = createUrl(requestUrl + "&category=" + categories + "&apiKey=" +
-                NEWS_API_KEY);
+        URL url = createUrl((requestUrl.contains("firebaseio")) ? requestUrl : requestUrl + "&category=" + categories +
+                "&apiKey=" + NEWS_API_KEY);
 
         String jsonResponse = null;
         try {
@@ -248,6 +251,7 @@ public class QueryUtils {
         }
         return sources;
     }
+
 
     private static URL createUrl(String stringUrl) {
         URL url = null;
@@ -445,7 +449,7 @@ public class QueryUtils {
                 entitiesList.addAll(QueryUtils.fetchEntityData(NAT_LANGUAGE_REQUEST_ROOT_URL, description));
                 Article article = new Article(sourceId, sourceName, author, title, description, url, urlToImage, publishedAt, entitiesList);
                 articles.add(article);
-//                myRef.push().setValue(article);
+//              myRef.push().setValue(article);
             }
 
         } catch (JSONException e) {
@@ -457,8 +461,67 @@ public class QueryUtils {
         return articles;
     }
 
-    public List<String> fetchCategoryData()
-    {
+    public List<String> fetchCategoryData() {
         return new ArrayList<String>();
+    }
+
+    public static List<Article> extractHistory(String articleJSON) {
+        final String NAT_LANGUAGE_REQUEST_ROOT_URL = "https://language.googleapis.com/v1beta2/documents:analyzeEntities";
+        // If the JSON string is empty or null, then return early.
+        if (TextUtils.isEmpty(articleJSON)) {
+            return null;
+        }
+        List<Article> articles = new ArrayList<>();
+
+        // Try to parse the SAMPLE_NEWS_JSON_RESPONSE. If there's a problem with the way the JSON
+        // is formatted, a JSONException exception object will be thrown.
+        // Catch the exception so the app doesn't crash, and print the error message to the logs.
+        try {
+            // Create a JSONObject from the SAMPLE_NEWS_JSON_RESPONSE string
+            JSONObject baseJsonResponse = new JSONObject(articleJSON);
+
+            Iterator x = baseJsonResponse.keys();
+            JSONArray articleArray = new JSONArray();
+
+            while (x.hasNext())
+            {
+                String key = (String) x.next();
+                articleArray.put(baseJsonResponse.get(key));
+            }
+
+            //JSONArray articleArray = baseJsonResponse.getJSONArray("articles");
+
+            //JSONArray articleArray = new JSONArray(articleJSON);
+
+            //FirebaseDatabase database = FirebaseDatabase.getInstance();
+            //DatabaseReference myRef = database.getReference("articles");
+            // for each article in the articleArray, create an {@link Article} object
+            for (int i = 0; i < articleArray.length(); i++) {
+
+                JSONObject currentArticle = articleArray.getJSONObject(i);
+                String author = currentArticle.getString("author");
+                String title = currentArticle.getString("title");
+                String description = currentArticle.getString("description");
+                String url = currentArticle.getString("url");
+                String urlToImage = currentArticle.getString("urlToImage");
+                String publishedAt = currentArticle.getString("publishedAt");
+                String sourceId = currentArticle.getString("sourceId");
+                String sourceName = currentArticle.getString("sourceName");
+
+
+                List<Entity> entitiesList = new ArrayList<>();
+                entitiesList.addAll(QueryUtils.fetchEntityData(NAT_LANGUAGE_REQUEST_ROOT_URL, description));
+                Article article = new Article(sourceId, sourceName, author, title, description, url, urlToImage, publishedAt, entitiesList);
+                articles.add(article);
+//              myRef.push().setValue(article);
+            }
+
+        } catch (JSONException e) {
+            // If an error is thrown when executing any of the above statements in the "try" block,
+            // catch the exception here, so the app doesn't crash. Print a log message
+            // with the message from the exception.
+            Log.e("QueryUtils", "Problem parsing the article JSON results", e);
+        }
+        return articles;
     }
 }
