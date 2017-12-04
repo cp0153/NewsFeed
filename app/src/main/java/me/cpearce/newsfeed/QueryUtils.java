@@ -81,7 +81,7 @@ public class QueryUtils {
         // Extract relevant fields from the JSON response and create a list of {@link Articles}s
 
         // Return the list of {@link Articles}s
-        return (jsonResponse.contains("articles")) ?extractArticles(jsonResponse) : extractHistory(jsonResponse);
+        return (requestUrl.contains("firebaseio")) ? extractHistory(jsonResponse): extractArticles(jsonResponse);
     }
 
     public static List<Article> fetchArticleData(String requestUrl) {
@@ -496,7 +496,7 @@ public class QueryUtils {
             //FirebaseDatabase database = FirebaseDatabase.getInstance();
             //DatabaseReference myRef = database.getReference("articles");
             // for each article in the articleArray, create an {@link Article} object
-            for (int i = 0; i < articleArray.length(); i++) {
+            for (int i = articleArray.length() - 1; i >= 0; i--) {
 
                 JSONObject currentArticle = articleArray.getJSONObject(i);
                 String author = currentArticle.getString("author");
