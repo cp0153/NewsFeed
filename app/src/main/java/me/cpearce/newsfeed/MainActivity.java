@@ -95,8 +95,8 @@ public class MainActivity extends AppCompatActivity
                 Article currentArticle = mAdapter.getItem(position);
 
                 //add item to FireBase
-                //UserHistoryUpload upload = new UserHistoryUpload();
-                //upload.execute(currentArticle);
+                UserHistoryUpload upload = new UserHistoryUpload();
+                upload.execute(currentArticle);
 
                 // Convert the String URL into a URI object (to pass into the Intent constructor)
                 Uri articleUri = Uri.parse(currentArticle.url);
