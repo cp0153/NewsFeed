@@ -3,6 +3,7 @@ package me.cpearce.newsfeed;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
@@ -64,15 +65,21 @@ public class ArticleAdapter extends ArrayAdapter<Article> {
         Article currentArticle = getItem(position);
 
         // Handle the article image
-        String articleUrl = currentArticle.urlToImage;
-        ImageView articleImgView = (ImageView) listItemView.findViewById(R.id.articleView);
-        new ImageLoadTask(articleUrl, articleImgView).execute();
+
+        if (!currentArticle.urlToImage.equals("null")) {
+            String articleUrl = currentArticle.urlToImage;
+            ImageView articleImgView = (ImageView) listItemView.findViewById(R.id.articleView);
+            new ImageLoadTask(articleUrl, articleImgView).execute();
+        }
+
         String title = currentArticle.title;
 
         // Find the TextView with view ID location
         TextView articleView = (TextView) listItemView.findViewById(R.id.article_title);
         // Display the location of the current article in that TextView
         articleView.setText(title);
+        articleView.setTypeface(null, Typeface.BOLD);
+        articleView.setTextColor(Color.BLACK);
 
         if (!currentArticle.author.equals("null")) {
             String author = "by " + currentArticle.author;
@@ -86,11 +93,6 @@ public class ArticleAdapter extends ArrayAdapter<Article> {
         // Display the description of the current article in that TextView
         descriptionView.setText(description);
 
-//        String entities = "categories:\n" + currentArticle.getmEntities();
-//        TextView entitiesView = (TextView) listItemView.findViewById(R.id.entities);
-//        entitiesView.setText(entities);
-
-
         List<Entity> entities = currentArticle.entitiesList;
 
         // get list of names with a url value
@@ -100,14 +102,9 @@ public class ArticleAdapter extends ArrayAdapter<Article> {
         for (int i = 0; i < entities.size(); i++) {
             if (!entities.get(i).metadata.isEmpty()) {
                 entityView.setClickable(true);
+                entityView.setFocusable(false);
                 entityView.setMovementMethod(LinkMovementMethod.getInstance());
-                tempText.append("<a href='").append(entities.get(i).metadata.get("wikipedia_url")).append("'> ").append(entities.get(i).name);
-                if (entities.size() == 1) {
-                    break;
-                }
-                if (i < entities.size() -1){
-                    tempText.append(", ");
-                }
+                tempText.append("<a href='").append(entities.get(i).metadata.get("wikipedia_url")).append("'> ").append(entities.get(i).name).append(" ");
             }
         }
         entityView.setText(Html.fromHtml(tempText.toString()));

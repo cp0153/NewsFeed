@@ -197,7 +197,6 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-
     @Override
     public void onLoadFinished(Loader loader, Object articles) {
         int loaderId = loader.getId();
