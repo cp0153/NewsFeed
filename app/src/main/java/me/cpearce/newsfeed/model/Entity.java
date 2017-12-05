@@ -5,6 +5,7 @@ import java.util.Map;
 
 /**
  * Created by Christopher on 11/11/2017.
+ * Entity model
  */
 
 public class Entity {
@@ -14,7 +15,7 @@ public class Entity {
     public final int salience;
 
     /**
-     * api reference https://cloud.google.com/natural-language/docs/reference/rest/v1/Entity
+     * api reference: https://cloud.google.com/natural-language/docs/reference/rest/v1/Entity
      * @param name Name of Entity
      * @param type Type of Entity possible options are UNKNOWN, PERSON, LOCATION, ORGANIZATION, EVENT
      *             WORK_OF_ART, CONSUMER_GOOD, OTHER

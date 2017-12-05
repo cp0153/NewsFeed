@@ -2,7 +2,7 @@ package me.cpearce.newsfeed.model;
 
 /**
  * Created by Christopher on 11/8/2017.
- * Class for a source
+ * Source Model
  */
 
 public class Source {

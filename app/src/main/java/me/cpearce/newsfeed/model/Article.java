@@ -4,7 +4,7 @@ import java.util.List;
 
 /**
  * Created by Christopher on 10/19/2017.
- * model for Articles
+ * Article model
  */
 
 public class Article {
@@ -20,7 +20,7 @@ public class Article {
 
     /**
      * Constructs a new {@link Article} object.
-     * reference here https://newsapi.org/docs/endpoints/top-headlines and https://newsapi.org/docs/endpoints/everything
+     * reference here: https://newsapi.org/docs/endpoints/top-headlines and https://newsapi.org/docs/endpoints/everything
      * @param sourceId   article source The identifier id
      * @param sourceName article source name
      * @param author      article author
