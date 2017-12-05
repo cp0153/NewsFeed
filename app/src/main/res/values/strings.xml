@@ -15,7 +15,7 @@
 
     <!-- Title for the Trending Section of the Nav Menu [CHAR LIMIT=NONE] -->
     <string name="Test_Title">Test</string>
-    <string name="news_sections">News Sections</string>
+    <string name="news_sections">News Categories</string>
 
     <!-- Content Descriptions -->
     <string name="content_desc_article_image">Image from articles image url</string>

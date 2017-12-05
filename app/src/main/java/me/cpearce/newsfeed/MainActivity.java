@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity
 
     private static final String ARTICLE_REQUEST_ROOT_URL = "https://newsapi.org//v2/top-headlines?language=en"; // ?source=google-news&sortBy=top&apiKey=23b2fa848a2a45aa85546b463a7afc0a";
 
-    private static final String NAT_LANGUAGE_REQUEST_ROOT_URL = "https://language.googleapis.com/v1beta2/documents:analyzeEntities"; // ?key=AIzaSyAh9uz0qNveHuiNYNBhjanf5gq86Su5rlo";
+    // private static final String NAT_LANGUAGE_REQUEST_ROOT_URL = "https://language.googleapis.com/v1beta2/documents:analyzeEntities"; // ?key=AIzaSyAh9uz0qNveHuiNYNBhjanf5gq86Su5rlo";
 
     private static final String SOURCE_REQUEST_URL = "https://newsapi.org/v2/sources?language=en";
 
@@ -53,14 +53,14 @@ public class MainActivity extends AppCompatActivity
 
     private static final int ARTICLE_LOADER_ID = 1;
     private static final int SOURCE_LOADER_ID = 2;
-    private static final int CATEGORY_LOADER_ID = 3;
+    // private static final int CATEGORY_LOADER_ID = 3;
 
     /**
      * TextView that is displayed when the list is empty
      */
     private TextView mEmptyStateTextView;
     private DrawerLayout mDrawerLayout;
-    private SearchView mSearchView;
+    // private SearchView mSearchView;
 
 
     @Override
