@@ -5,7 +5,9 @@ import android.util.Log;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.FirebaseAuth;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -231,6 +233,18 @@ public class QueryUtils {
 
             FirebaseDatabase database = FirebaseDatabase.getInstance();
             DatabaseReference SourceRef = database.getReference("sources");
+
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+
+            if (user != null) {
+                // User is signed in
+                SourceRef = database.getReference(user.getUid());
+            } else {
+                // User not signed in
+                SourceRef = database.getReference("sources");
+            }
+
 
             for (int i = 0; i < sourcesArray.length(); i++) {
                 JSONObject currentSource = sourcesArray.getJSONObject(i);
