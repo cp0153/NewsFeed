@@ -20,7 +20,8 @@ public class Article {
 
     /**
      * Constructs a new {@link Article} object.
-     *  @param sourceId   article source The identifier id
+     * reference here https://newsapi.org/docs/endpoints/top-headlines and https://newsapi.org/docs/endpoints/everything
+     * @param sourceId   article source The identifier id
      * @param sourceName article source name
      * @param author      article author
      * @param title       article title
