@@ -13,7 +13,7 @@ import com.google.firebase.database.FirebaseDatabase;
 public class UserHistoryUpload extends AsyncTask<Article,Void,String> {
     private static final FirebaseDatabase database = FirebaseDatabase.getInstance();
 
-    public AsyncResponse delegate = null;
+    // public AsyncResponse delegate = null;
 
     @Override
     protected String doInBackground(Article... parms)
