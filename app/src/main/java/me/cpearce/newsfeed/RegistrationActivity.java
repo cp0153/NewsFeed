@@ -38,8 +38,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
                         if (task.isSuccessful()){
                             Toast.makeText(RegistrationActivity.this, "Registration Successful", Toast.LENGTH_LONG).show();
-                            Intent i = new Intent(RegistrationActivity.this, LoginActivity.class);
-                            startActivity(i);
+                            finish();
                         }
                         else{
                             Toast.makeText(RegistrationActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();

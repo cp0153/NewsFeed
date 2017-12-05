@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -249,6 +250,14 @@ public class MainActivity extends AppCompatActivity
     public void btnLogin_Click(View v){
         Intent i = new Intent(MainActivity.this, LoginActivity.class);
         startActivity(i);
+
+        //hid the registration button
+        Button regButton = (Button) findViewById(R.id.btnRegistration);
+        regButton.setVisibility(View.GONE);
+
+        //change login button to logout
+        Button loginBtn = (Button) findViewById(R.id.btnLogin);
+        loginBtn.setText(R.string.logout_btn_txt);
     }
 
 }

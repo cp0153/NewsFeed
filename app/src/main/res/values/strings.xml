@@ -31,5 +31,6 @@
     <string name="password_txt">Password</string>
     <string name="register_user_btn">Register</string>
     <string name="login_user_btn">Login</string>
+    <string name="logout_btn_txt">LOGOUT</string>
 
 </resources>
