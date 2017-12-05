@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity
 
     private static final String EVERYTHING_REQUEST_URL = "https://newsapi.org//v2/everything?language=en";
 
-    private static final String HISTORY_REQUEST_URL = "https://newsfeed-38210.firebaseio.com/articles.json?orderBy=%22$key%22&limitToLast=20";
+    private static final String HISTORY_REQUEST_URL = "https://newsfeed-38210.firebaseio.com/articles.json?orderBy=%22$key%22&limitToLast=50";
 
     // these two variables are used to reset the loader
     private static String currentArticleUrl = ARTICLE_REQUEST_ROOT_URL;
