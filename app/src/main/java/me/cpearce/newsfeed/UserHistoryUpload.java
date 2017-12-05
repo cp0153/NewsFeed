@@ -41,6 +41,6 @@ public class UserHistoryUpload extends AsyncTask<Article,Void,String> {
 
     @Override
     protected void onPostExecute(String result) {
-        delegate.porcessFinish(result);
+      //  delegate.porcessFinish(result);
     }
 }

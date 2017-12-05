@@ -19,17 +19,4 @@ public class Entity {
         this.metadata.putAll(metadata);
         this.salience = salience;
     }
-
-    public Map<String, String> getWikiUrl() {
-        HashMap<String, String> hm = new HashMap<>();
-        if (this.metadata.size() == 1) {
-
-            hm.put(this.name, this.metadata.get("wikipedia_url"));
-            return hm;
-        }
-        else {
-            hm.put(this.name, "no wikipedia url");
-            return hm;
-        }
-    }
 }

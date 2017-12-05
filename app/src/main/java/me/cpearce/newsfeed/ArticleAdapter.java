@@ -32,12 +32,6 @@ import me.cpearce.newsfeed.model.Entity;
 public class ArticleAdapter extends ArrayAdapter<Article> {
 
     /**
-     * The part of the location string from the USGS service that we use to determine
-     * whether or not there is a location offset present ("5km N of Cairo, Egypt").
-     */
-    private static final String LOCATION_SEPARATOR = " of ";
-
-    /**
      * Constructs a new {@link ArticleAdapter}.
      *
      * @param context  of the app

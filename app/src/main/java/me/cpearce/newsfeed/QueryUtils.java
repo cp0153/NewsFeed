@@ -27,6 +27,7 @@ import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.AbstractMap.SimpleEntry;
@@ -83,7 +84,7 @@ public class QueryUtils {
         // Extract relevant fields from the JSON response and create a list of {@link Articles}s
 
         // Return the list of {@link Articles}s
-        return (jsonResponse.contains("articles")) ?extractArticles(jsonResponse) : extractHistory(jsonResponse);
+        return (requestUrl.contains("firebaseio")) ? extractHistory(jsonResponse): extractArticles(jsonResponse);
     }
 
     public static List<Article> fetchArticleData(String requestUrl) {
@@ -510,11 +511,24 @@ public class QueryUtils {
             //FirebaseDatabase database = FirebaseDatabase.getInstance();
             //DatabaseReference myRef = database.getReference("articles");
             // for each article in the articleArray, create an {@link Article} object
-            for (int i = 0; i < articleArray.length(); i++) {
+
+            List<String> names = new ArrayList<String>();
+
+            for (int i = articleArray.length() - 1; i >= 0; i--) {
+
 
                 JSONObject currentArticle = articleArray.getJSONObject(i);
+
+
+
                 String author = currentArticle.getString("author");
                 String title = currentArticle.getString("title");
+
+                if (names.contains(title))
+                {
+                    continue;
+                }
+
                 String description = currentArticle.getString("description");
                 String url = currentArticle.getString("url");
                 String urlToImage = currentArticle.getString("urlToImage");
@@ -527,6 +541,7 @@ public class QueryUtils {
                 entitiesList.addAll(QueryUtils.fetchEntityData(NAT_LANGUAGE_REQUEST_ROOT_URL, description));
                 Article article = new Article(sourceId, sourceName, author, title, description, url, urlToImage, publishedAt, entitiesList);
                 articles.add(article);
+                names.add(title);
 //              myRef.push().setValue(article);
             }
 
@@ -536,6 +551,6 @@ public class QueryUtils {
             // with the message from the exception.
             Log.e("QueryUtils", "Problem parsing the article JSON results", e);
         }
-        return articles;
+        return (new ArrayList(new HashSet(articles))).subList(0,20);
     }
 }

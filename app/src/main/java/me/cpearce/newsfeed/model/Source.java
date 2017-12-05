@@ -16,7 +16,7 @@ public class Source {
 
     /**
      * Constructs a new {@link Source} object.
-     * object used for soucres endpoint at https://newsapi.org/#apiSources
+     * object used for sources endpoint at https://newsapi.org/#apiSources
      *
      * @param id               The unique identifier for the news source. This is needed when querying
      *                         the /articles endpoint to retrieve article metadata.
