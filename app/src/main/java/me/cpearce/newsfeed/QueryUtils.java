@@ -238,14 +238,6 @@ public class QueryUtils {
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
 
-            if (user != null) {
-                // User is signed in
-                SourceRef = database.getReference(user.getUid());
-            } else {
-                // User not signed in
-                SourceRef = database.getReference("sources");
-            }
-
 
             for (int i = 0; i < sourcesArray.length(); i++) {
                 JSONObject currentSource = sourcesArray.getJSONObject(i);
@@ -535,7 +527,6 @@ public class QueryUtils {
                 String publishedAt = currentArticle.getString("publishedAt");
                 String sourceId = currentArticle.getString("sourceId");
                 String sourceName = currentArticle.getString("sourceName");
-
 
                 List<Entity> entitiesList = new ArrayList<>();
                 entitiesList.addAll(QueryUtils.fetchEntityData(NAT_LANGUAGE_REQUEST_ROOT_URL, description));
