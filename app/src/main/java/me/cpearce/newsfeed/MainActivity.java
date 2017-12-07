@@ -19,6 +19,10 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +44,7 @@ public class MainActivity extends AppCompatActivity
 
     private static final String EVERYTHING_REQUEST_URL = "https://newsapi.org//v2/everything?language=en";
 
-    private static final String HISTORY_REQUEST_URL = "https://newsfeed-38210.firebaseio.com/articles.json?orderBy=%22$key%22&limitToLast=50";
+    private static final String HISTORY_REQUEST_URL = "https://newsfeed-38210.firebaseio.com/";
 
     // these two variables are used to reset the loader
     private static String currentArticleUrl = ARTICLE_REQUEST_ROOT_URL;
@@ -163,7 +167,8 @@ public class MainActivity extends AppCompatActivity
                 //Get articles user viewed perviously from FireBase
                 if(menuItem.getTitle().equals("History"))
                 {
-                    currentArticleUrl = HISTORY_REQUEST_URL;
+                    String user = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                    currentArticleUrl = HISTORY_REQUEST_URL + user;
 
                 }
 

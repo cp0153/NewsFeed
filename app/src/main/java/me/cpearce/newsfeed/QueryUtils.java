@@ -66,7 +66,8 @@ public class QueryUtils {
 
 
     public static List<Article> fetchArticleData(String requestUrl, List<Source> sources) {
-        requestUrl = (requestUrl.contains("firebaseio")) ? requestUrl : requestUrl +
+        requestUrl = (requestUrl.contains("firebaseio")) ? requestUrl + ".json?orderBy=%22$key%22&limitToLast=50" :
+                requestUrl +
                 "&sources=" +
                 getCommaSeparatedSourceList(sources) +
                 "&apiKey=" +
@@ -542,6 +543,6 @@ public class QueryUtils {
             // with the message from the exception.
             Log.e("QueryUtils", "Problem parsing the article JSON results", e);
         }
-        return (new ArrayList(new HashSet(articles))).subList(0,20);
+        return (new ArrayList(new HashSet(articles)));
     }
 }
