@@ -1,6 +1,6 @@
 # News-Feed
 
-### Android application that presents the top news from and performs an entity analysis on keywords in the article description to produce wikipedia links
+Android application that presents the top news from and performs an entity analysis on the article description to produce wikipedia links
 
 ![Alt text](https://github.com/cp0153/NewsFeed/blob/master/screenshot3.png?raw=true "Screenshots")
 
