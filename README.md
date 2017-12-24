@@ -1,6 +1,6 @@
 # News-Feed
 
-Android application that presents top news from over 70 different sources. A menu is available to select a news catagory. Firebase is used so users can sign in, and view their broswing history. Google natuaral-language API is used to Perform an entity analysis on the article description and generate wikipedia links.
+Android application that presents top news from over 70 different sources. A menu is available to select a news catagory. Firebase is used so users can sign in, and view their browsing history. Google natuaral-language API is used to Perform an entity analysis on the article description and generate wikipedia links.
 
 ![Alt text](https://github.com/cp0153/NewsFeed/blob/master/screenshot3.png?raw=true "Screenshots")
 
