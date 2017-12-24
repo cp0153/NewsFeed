@@ -61,6 +61,9 @@ public class QueryUtils {
     private static final FirebaseDatabase database = FirebaseDatabase.getInstance();
     // private static final DatabaseReference NEWS_API_KEY = database.getReference("apiKey").child("newsapi");
     // private static final DatabaseReference NAT_API_KEY = database.getReference("apiKey").child("google");
+    
+    // These keys have since been revoked, just used for demo purposes. In a production application,
+    // the keys should be kept on a backend server that the application communicates with.
     private static final String NEWS_API_KEY = "23b2fa848a2a45aa85546b463a7afc0a";
     private static final String NAT_API_KEY = "AIzaSyAh9uz0qNveHuiNYNBhjanf5gq86Su5rlo";
 
